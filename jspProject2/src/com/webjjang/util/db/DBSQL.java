@@ -27,7 +27,7 @@ public class DBSQL {
 		= " delete from board where no = ? ";
 	
 	public static final String BOARD_INCREASE 
-		= " updeate board set hit = hit + 1 where no = ? ";
+		= " update board set hit = hit + 1 where no = ? ";
 	
 	public static final String BOARD_GET_TOTALROW 
 		= " select count(*) from board ";

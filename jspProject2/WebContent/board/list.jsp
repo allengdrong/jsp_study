@@ -45,7 +45,8 @@ $(function(){ // jquery에서 익명함수를 전달해서 저장해놨다가 Do
 			// .text() : 객체(태그) 사이에 문자를 가져온다.
 			// .text(data) : 객체(태그) 사이에 문자를 셋팅한다.
 			var no = $(this).find(".no").text();
-			location = "view.jsp?no=" + no;
+			// 조회수 1 증가를 위해 inc=1을 넘긴다.
+			location = "view.jsp?no=" + no + "&inc=1";
 	});
 });
 </script>

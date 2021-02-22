@@ -9,12 +9,16 @@
 // 자바 코드 구간. JSP-Service-DAO -> /board/view.jsp
 String url = request.getServletPath();
 
-// 넘어오는 데이터 받기 - 글번호
+// 넘어오는 데이터 받기
+// - 글번호
 String strNo = request.getParameter("no");
 long no = Long.parseLong(strNo);
 
-@SuppressWarnings("unchecked")
-BoardVO vo = (BoardVO) ExeService.execute(Beans.get(url), no);
+// - 조회수 1 증가
+String strInc = request.getParameter("inc");
+long inc = Long.parseLong(strInc);
+
+BoardVO vo = (BoardVO) ExeService.execute(Beans.get(url), new Long[]{no, inc});
 // 서버 객체 request에 담는다.
 request.setAttribute("vo", vo);
 %>
