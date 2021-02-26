@@ -61,4 +61,15 @@ public class DBSQL {
 			+ " ) "
 		+ ") where rnum between ? and ?  ";
 	
+	// 회원등급 수정
+	public static final String MEMBER_GRADE_MODIFY
+	= "update member set gradeNo = ? where id = ?";
+	
+	// 회원정보 보기
+	public static final String MEMBER_VIEW 
+	= " select m.id, m.name, m.gender, to_char(birth, 'yyyy.mm.dd') birth, m.tel, m.email, "
+	+ "to_char(regDate, 'yyyy.mm.dd') regDate, m.status, m.gradeNo, g.gradeName "
+	+ "from member m, grade g "
+	+ " where id = ? AND (m.gradeNo = g.gradeNo)";
+	
 }

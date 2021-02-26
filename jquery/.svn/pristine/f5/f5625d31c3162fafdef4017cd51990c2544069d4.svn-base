@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- jQuery 라이브러리 등록 - CDN 방식 -->
+<script type="text/javascript" 
+src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<style type="text/css">
+div{
+	width: 600px;
+	height: 30px;
+	margin: 10px;
+	border: 1px solid orange;
+}
+</style>
+
+<script type="text/javascript">
+$(function(){
+	
+	// 처음에 실행되는 처리문
+	// 객체 선택 - 처음(:first)과 마지막(:last) 객체 선택
+	$("div:first").text("처음 div");
+	$("div:last").text("마지막 div");
+	
+	// table tr - 홀수와 짝수
+	// 테이블의 너비를 100%
+	$("table").css("width", "100%");
+	$("table, tr, td").css("border", "1px solid #444");
+	// 짝수는 배열인 경우 0부터 시작을 한다.
+	$("table tr:even").css("background", "orange");
+	
+	// 이벤트 처리
+	$("#showBtn").click(function(){
+		// div 보이게 - > $("div") -> 결과가 object[] -> foreach를 이용해서 각각에 이벤트 처리
+		$("div").show();
+		alert($("div"));
+	});
+	$("#hideBtn").click(function(){
+		// div 보이게 - > $("div") -> 결과가 object[] -> foreach를 이용해서 각각에 이벤트 처리
+		$("div").hide();
+		alert($("div"));
+	});
+	
+	$("#midRedBtn").click(function(){
+		$("#midDiv").css("border-color","red");
+		alert($("#midDiv"));
+	});
+});
+</script>
+</head>
+<body>
+<button id="showBtn">보이기</button><button id="hideBtn">숨기기</button>
+<button id="midRedBtn">중간 div red</button>
+<div></div>
+<div id="midDiv"></div>
+<div></div>
+<table>
+	<tr><td>td</td></tr>
+	<tr><td>td</td></tr>
+	<tr><td>td</td></tr>
+	<tr><td>td</td></tr>
+	<tr><td>td</td></tr>
+	<tr><td>td</td></tr>
+</table>
+</body>
+</html>

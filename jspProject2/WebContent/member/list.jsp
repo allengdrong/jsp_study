@@ -45,6 +45,21 @@ $(function(){ // jquery에서 익명함수를 전달해서 저장해놨다가 Do
 		var gradeNo = $(this).closest(".dataRow").find(".gradeNo").text();
 		$(".formGradeNo").val([gradeNo]);
 	});
+	
+	// 등급수정 폼의 전달 버튼 이벤트
+	// 객체의 선택이 잘되는지 확인
+	// alert($("#formGradeModifyBtn"));
+	// alert($("#formGradeModifyBtn").prop("tagName"));
+	// 폼의 전달 버튼의 이벤트 붙이기
+	$("#formGradeModifyBtn").click(function(){
+		// alert("formGradeModifyBtn click");
+		// 폼의 데이터 넘기기
+		// 폼 객체 확인
+		// alert($("#gradeModifyForm"));
+		// 폼의 데이터 전송하기 -> 폼객체.submit()
+		$("#gradeModifyForm").submit();
+	});
+	
 });
 </script>
 
@@ -120,7 +135,8 @@ $(function(){ // jquery에서 익명함수를 전달해서 저장해놨다가 Do
 		</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" id="formGradeModifyBtn">변경</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
       </div>
     </div>
 

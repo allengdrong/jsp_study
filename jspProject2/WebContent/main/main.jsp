@@ -28,6 +28,7 @@
 		<span>${login.name }(${login.id })</span>님은 ${login.gradeName } 권한으로 로그인 되어 있습니다.
 	</div>
 	<a href="../member/logout.jsp" class="btn btn-default">로그아웃</a>
+	<a href="../member/view.jsp" class="btn btn-default">내정보보기</a>
 	<c:if test="${login.gradeNo == 9 }">
 		<!-- 관리자 메뉴 -->
 	<a href="../member/list.jsp" class="btn btn-default">회원리스트</a>

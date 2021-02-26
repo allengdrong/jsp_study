@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<!-- jQuery 라이브러리 등록 - CDN 방식 -->
+<script type="text/javascript" 
+src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<style type="text/css">
+	div.bclass{
+		width: 400px;
+		height: 40px;
+		border: 2px dotted #aaa;
+		margin: 10px;
+	}
+</style>
+
+<script type="text/javascript">
+$(function(){
+	$(".bclass>button").click(function(){
+		// alert("div click");
+		// $(this) -> 클릭이벤트가 일어난 button
+		// .parent() -> button 바로 위의 태그(div)
+		$(this).parent().css("border", "2px dotted red");
+	});
+	
+	// dataRow class 안에 잇는 제거 버튼 선택하고 이벤트 처리
+	$(".dataRow button").click(function(){
+		// alert("제거 버튼");
+		// .parents(selector) -> 선택된 객체의 위쪽에서 selector를 찾는다. 여러개를 찾는다.
+		// .remove() -> 선택된 객체 없애기
+		// .closest(selector) -> 선택된 객체 위쪽으로 처음 나오는 selector를 찾는다. 한개만 찾는다.
+		//$(this).parents(".dataRow").remove();
+		$(this).closest(".dataRow").remove();
+	});
+});
+</script>
+
+</head>
+<body>
+<div class="bclass"><button>클릭</button></div>
+<div class="bclass"><button>클릭</button></div>
+<div class="bclass"><button>클릭</button></div>
+<div class="dataRow">
+	<div>클릭하면 사라집니다.</div>
+	<div><input type="file"><button>제거</button></div>
+</div>
+<div class="dataRow">
+	<div>클릭하면 사라집니다.</div>
+	<div><input type="file"><button>제거</button></div>
+</div>
+<div class="dataRow">
+	<div>클릭하면 사라집니다.</div>
+	<div><input type="file"><button>제거</button></div>
+</div>
+</body>
+</html>
