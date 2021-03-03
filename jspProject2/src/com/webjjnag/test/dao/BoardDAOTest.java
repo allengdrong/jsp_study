@@ -11,7 +11,7 @@ public class BoardDAOTest {
 		// BoardDAO 테스팅.
 		// BoardDAO 객체 생성
 		BoardDAO dao = new BoardDAO();
-		System.out.println(dao.list());
+	// 	System.out.println(dao.list());
 		
 		System.out.println(DBSQL.MEMBER_LIST);
 	}

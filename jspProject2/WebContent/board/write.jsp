@@ -7,7 +7,7 @@
 // 자바 부분입니다.
 
 // 한글처리
-request.setCharacterEncoding("utf-8");
+System.out.println("EncodingFilter에서 한글처리 완료" + request.getCharacterEncoding());
 
 // 1. 데이터 수집
 String title = request.getParameter("title");

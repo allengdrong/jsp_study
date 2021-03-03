@@ -1,7 +1,5 @@
 package com.webjjang.main.controller;
 
-import com.webjjang.board.dao.BoardDAO;
-
 public interface Service {
 
 	// 처리문 실행

@@ -14,6 +14,8 @@ import com.webjjang.board.vo.BoardVO;
 import com.webjjang.util.db.DBInfo;
 import com.webjjang.util.db.DBSQL;
 
+import com.webjjang.util.PageObject;
+
 public class BoardDAO {
 
 	// 필요한 객체 선언 - con, pstmt, rs
@@ -22,18 +24,26 @@ public class BoardDAO {
 	ResultSet rs = null;
 	
 	// 1. 게시판 리스트
-	public List<BoardVO> list() throws Exception{
+	public List<BoardVO> list(PageObject pageObject) throws Exception{
+		
+		// 넘어오는 데이터 확인
+		System.out.println("BoardDAO.list().pageObject : " + pageObject);
+		
 		List<BoardVO> list = null;
 		
 		try {
 			//1. 드라이버 확인 + 2. 연결
 			con = DBInfo.getConnection();
+			System.out.println("BoardDAO.list().con : " + con);
 			//3. sql -> DBSQL + 4. 실행객체 + 데이터 셋팅
+			System.out.println("BoardDAO.list().DBSQL.BOARD_LIST : " + DBSQL.BOARD_LIST);
 			pstmt = con.prepareStatement(DBSQL.BOARD_LIST);
-			pstmt.setLong(1, 1); // 시작 번호
-			pstmt.setLong(2, 10); // 끝 번호
+			System.out.println("BoardDAO.list().pstmt : " + pstmt);
+			pstmt.setLong(1, pageObject.getStartRow()); // 시작 번호
+			pstmt.setLong(2, pageObject.getEndRow()); // 끝 번호
 			// 5. 실행
 			rs = pstmt.executeQuery();
+			System.out.println("BoardDAO.list().rs : " + rs);
 			// 6. 표시 -> 데이터담기
 			if(rs != null) {
 				while(rs.next()) {
@@ -45,6 +55,7 @@ public class BoardDAO {
 					vo.setWriteDate(rs.getString("writeDate"));
 					vo.setHit(rs.getLong("hit"));
 					list.add(vo);
+					System.out.println("BoardDAO.list().while().vo : " + vo);
 				}
 			}
 			
@@ -59,12 +70,47 @@ public class BoardDAO {
 			DBInfo.close(con, pstmt, rs);
 		}
 		
+		System.out.println("BoardDAO.list().list : " + list);
 		return list;
 	}
 	
 	// 1-1. 전체 데이터 갯수 구하기
 	public long getTotalRow() throws Exception{
-		return 0;
+		System.out.println("BoardDAO.getTotalRow()");
+		
+		long result = 0;
+		
+		try {
+			//1.2.
+			con = DBInfo.getConnection();
+			System.out.println("BoardDAO.getTotalRo().con : " + con);
+			
+			// 3.4.
+			// 쿼리 확인
+			System.out.println("BoardDAO.getTotalRo().DBSQL.BOARD_GET_TOTALROW : "
+					+ DBSQL.BOARD_GET_TOTALROW );
+			pstmt = con.prepareStatement(DBSQL.BOARD_GET_TOTALROW);
+			System.out.println("BoardDAO.getTotalRo().pstmt : " + pstmt);
+			
+			// 5. 
+			// rs는 출력해 볼수 있다. 그러나 rs.next() 출력하면 데이터를 한개 넘기게 된다.
+			rs = pstmt.executeQuery();
+			System.out.println("BoardDAO.getTotalRo().rs : " + rs);
+			// 6.
+			if(rs != null && rs.next()) {
+				result = rs.getLong(1);
+				System.out.println("BoardDAO.getTotalRo().result : " + result);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new Exception("게시판 데이터 전체 갯수를 가져오는 DB 처리 중 오류");
+		} finally {
+			DBInfo.close(con, pstmt, rs);
+		}
+		
+		System.out.println("BoardDAO.getTotalRo().result : " + result);
+		return result;
 	}
 	
 	// 2. 게시판 글보기

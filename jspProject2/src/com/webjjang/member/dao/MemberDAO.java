@@ -184,6 +184,6 @@ public class MemberDAO {
 		}
 		System.out.println("MemberDAO.view().vo : " + vo);
 		return vo;
-
+		// test
 	}
 }
