@@ -20,6 +20,7 @@ public class MemberDAO {
 
 	// 로그인 처리를 위한 메서드
 	public LoginVO login(LoginVO vo) throws Exception {
+		System.out.println(vo);
 		LoginVO loginVO = null;
 
 		try {
@@ -48,6 +49,7 @@ public class MemberDAO {
 			DBInfo.close(con, pstmt, rs);
 		}
 
+		System.out.println(loginVO);
 		return loginVO;
 	}
 

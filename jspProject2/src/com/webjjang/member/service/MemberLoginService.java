@@ -17,6 +17,8 @@ public class MemberLoginService implements Service{
 	@Override
 	public Object service(Object obj) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println(obj);
+		System.out.println(dao);
 		return dao.login((LoginVO) obj);
 	}
 

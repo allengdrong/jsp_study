@@ -44,6 +44,9 @@ public class DBSQL {
 	+ ") where rnum between ? and ?  ";
 	public static final String NOTICE_GET_TOTALROW
 	= " select count(*) from notice ";
+	public static final String NOTICE_WRITE 
+	= " insert into notice(no, title, content, startDate, endDate) "
+	+ " values(notice_seq.nextval, ?, ?, ?, ?) ";
 
 	
 	// 회원관리 쿼리 ---------------------------------------------------------
@@ -74,4 +77,18 @@ public class DBSQL {
 	public static final String MEMBER_GRADE_MODIFY
 	= "update member set gradeNo = ? where id = ?";
 	
+	// 메시지 쿼리 ----------------------------------------------------------
+	// 메시지 리스트 쿼리
+	public static final String MESSAGE_LIST
+	= "select rnum, no, sender, "
+	+ "to_char(sendDate, 'yyyy.mm.dd') sendDate, accepter, "
+	+ "to_char(acceptDate, 'yyyy.mm.dd') acceptDate from ( "
+		+ " select rownum rnum, no, sender, sendDate, accepter, acceptDate from ( "
+		+ " select no, sender, sendDate, accepter, acceptDate from message"
+		+ " order by no desc"
+		+ " ) "
+	+ " ) where rnum between ? and ? ";
+	// 메시지 전체보기 쿼리
+	public static final String MESSAGE_GET_TOTALROW
+	= " select count(*) from message ";
 }

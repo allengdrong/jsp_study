@@ -19,6 +19,7 @@ vo.setPw(pw);
 // jsp - service - dao
 String url = request.getServletPath();
 LoginVO loginVO = (LoginVO) ExeService.execute(Beans.get(url), vo);
+System.out.println(loginVO);
 
 // id, pw가 틀린 경우의 처리
 if(loginVO == null) throw new Exception("로그인 정보를 확인해 주세요.");
