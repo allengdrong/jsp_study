@@ -13,7 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
+// import javax.websocket.Session;
 
 import com.webjjang.member.vo.LoginVO;
 // import javax.servlet.annotation.WebFilter;

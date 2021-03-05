@@ -6,10 +6,11 @@ public class MessageVO {
 	private long no;
 	private String content;
 	private String sender;
+	private String sendName;
 	private String sendDate;
 	private String accepter;
+	private String acceptName;
 	private String acceptDate;
-	
 	public long getNo() {
 		return no;
 	}
@@ -28,6 +29,12 @@ public class MessageVO {
 	public void setSender(String sender) {
 		this.sender = sender;
 	}
+	public String getSendName() {
+		return sendName;
+	}
+	public void setSendName(String sendName) {
+		this.sendName = sendName;
+	}
 	public String getSendDate() {
 		return sendDate;
 	}
@@ -40,6 +47,12 @@ public class MessageVO {
 	public void setAccepter(String accepter) {
 		this.accepter = accepter;
 	}
+	public String getAcceptName() {
+		return acceptName;
+	}
+	public void setAcceptName(String acceptName) {
+		this.acceptName = acceptName;
+	}
 	public String getAcceptDate() {
 		return acceptDate;
 	}
@@ -49,8 +62,9 @@ public class MessageVO {
 	
 	@Override
 	public String toString() {
-		return "MessageVO [no=" + no + ", content=" + content + ", sender=" + sender + ", sendDate=" + sendDate
-				+ ", accepter=" + accepter + ", acceptDate=" + acceptDate + "]";
+		return "MessageVO [no=" + no + ", content=" + content + ", sender=" + sender + ", sendName=" + sendName
+				+ ", sendDate=" + sendDate + ", accepter=" + accepter + ", acceptName=" + acceptName + ", acceptDate="
+				+ acceptDate + "]";
 	}
 	
 }

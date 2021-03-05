@@ -78,17 +78,37 @@ public class DBSQL {
 	= "update member set gradeNo = ? where id = ?";
 	
 	// 메시지 쿼리 ----------------------------------------------------------
-	// 메시지 리스트 쿼리
+	// 메시지 리스트 쿼리 - 번호, 보낸사람의 아이디, 보낸날짜, 받은사람의 아이디, 받은 날짜
 	public static final String MESSAGE_LIST
-	= "select rnum, no, sender, "
-	+ "to_char(sendDate, 'yyyy.mm.dd') sendDate, accepter, "
-	+ "to_char(acceptDate, 'yyyy.mm.dd') acceptDate from ( "
+	= " select rnum, no, sender, "
+	+ " to_char(sendDate, 'yyyy.mm.dd') sendDate, accepter, "
+	+ " to_char(acceptDate, 'yyyy.mm.dd') acceptDate from ( "
 		+ " select rownum rnum, no, sender, sendDate, accepter, acceptDate from ( "
-		+ " select no, sender, sendDate, accepter, acceptDate from message"
-		+ " order by no desc"
+			+ " select no, sender, sendDate, accepter, acceptDate from message "
+			+ " where sender = ? or accepter = ? "
+			+ " order by no desc "
 		+ " ) "
 	+ " ) where rnum between ? and ? ";
 	// 메시지 전체보기 쿼리
 	public static final String MESSAGE_GET_TOTALROW
 	= " select count(*) from message ";
+	// 메시지 보내기 쿼리
+	public static final String MESSAGE_WRITE 
+	= " insert into message(no, sender, content, accepter ) "
+			+ " values(message_seq.nextval, ?, ?, ? ) ";
+	
+	// 3. 메시지 읽기 쿼리
+	public static final String MESSAGE_VIEW
+	= " select no, content, sender, to_char(sendDate, 'yyyy.mm.dd') sendDate, "
+	+ " accepter,  to_char(acceptDate, 'yyyy.mm.dd') acceptDate from message "
+	+ " where no = ? ";
+	// 3-1. 메시지 읽기 표시 쿼리 - 보려고 하는 글과 같고 받은 사람이 본인이어야 하고 받은 날짜가 없어야만 한다.
+	public static final String MESSAGE_VIEW_READ 
+	= " update message set acceptDate = sysdate "
+	+ " where no = ? and accepter = ? and acceptDate is null ";
+	
+	// 4. 메시지 삭제 쿼리
+	public static final String MESSAGE_DELETE 
+	= " delete from message where no = ? ";
+	
 }
