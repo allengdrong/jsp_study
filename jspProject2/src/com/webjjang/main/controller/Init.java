@@ -24,6 +24,9 @@ import com.webjjang.message.service.MessageWriteService;
 import com.webjjang.notice.dao.NoticeDAO;
 import com.webjjang.notice.service.NoticeListService;
 import com.webjjang.notice.service.NoticeWriteService;
+import com.webjjang.qna.dao.QnaDAO;
+import com.webjjang.qna.service.QnaListService;
+import com.webjjang.qna.service.QnaQuestionService;
 
 /**
  * Servlet implementation class Init
@@ -76,6 +79,17 @@ public class Init extends HttpServlet {
 		Beans.get("/notice/list.jsp").setDAO(Beans.getDAO("noticeDAO"));
 		Beans.get("/notice/write.jsp").setDAO(Beans.getDAO("noticeDAO"));
 
+		// 질문답변 객체를 생성 후 저장 ====================================
+		// dao 생성 저장
+		Beans.putDAO("qnaDAO", new QnaDAO());
+		// service 생성 저장
+		Beans.put("/qna/list.jsp", new QnaListService());
+		Beans.put("/qna/question.jsp", new QnaQuestionService());
+		// service에 dao 넣기 - 조립
+		Beans.get("/qna/list.jsp").setDAO(Beans.getDAO("qnaDAO"));
+		Beans.get("/qna/question.jsp").setDAO(Beans.getDAO("qnaDAO"));
+
+		
 		// 메시지 객체를 생성 후 저장 ====================================
 		// dao 생성 저장
 		Beans.putDAO("messageDAO", new MessageDAO());

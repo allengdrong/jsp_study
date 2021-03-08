@@ -111,4 +111,27 @@ public class DBSQL {
 	public static final String MESSAGE_DELETE 
 	= " delete from message where no = ? ";
 	
+	// QnA 쿼리
+	// 1. 리스트 - 번호, 제목, 작성자이름(작성자ID), 작성일, 조회수
+	public static final String QNA_LIST 
+	= "select rnum,  no, title, name, id, "
+	+ "to_char(writeDate, 'yyyy.mm.dd') writeDate, hit, levNo "
+	+ " from( "
+		+ " select rownum rnum, no, title, name, id, writeDate, hit, levNo from ("
+			+ " select q.no, q.title, m.name, q.id, q.writeDate, q.hit, q.levNo "
+			+ " from qna q, member m "
+			+ " where q.id = m.id "
+			+ " order by q.refNo desc, q.ordNo "
+		+ " ) "
+	+ ") where rnum between ? and ?  ";
+	
+	public static final String QNA_GET_TOTALROW
+	= " select count(*) from qna ";
+	
+	public static final String QNA_QUESTION
+	= " insert into qna(no, title, content, id, refNo, ordNo, levNo, parentNo) "
+	+ " values(qna_seq.nextval, ?, ?, ?, qna_seq.nextval, 1, 0, qna_seq.nextval) ";
+	public static final String QNA_ANSWER
+	= " insert into qna(no, title, content, id, refNo, ordNo, levNo, parentNo) "
+			+ " values(qna_seq.nextval, ?, ?, ?, ?, ?, ?, ?) ";
 }
