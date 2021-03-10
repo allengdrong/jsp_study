@@ -92,11 +92,12 @@ article {
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
 						<li><a href="${path }/notice/list.jsp">공지사항</a></li>
+						<li><a href="${path }/image/list.jsp">이미지</a></li>
 						<li><a href="${path }/board/list.jsp">게시판</a></li>
-						<c:if test="${!empty login }">
-						<!-- 로그인 되어 있는 경우의 메뉴 -->
 						<!-- $amp; : &, &lt; : <, &gt; : >. &ndsp; : blank -->
 						<li><a href="${path }/qna/list.jsp">Q&amp;A</a></li>
+						<c:if test="${!empty login }">
+						<!-- 로그인 되어 있는 경우의 메뉴 -->
 						<li><a href="${path }/message/list.jsp">메시지</a></li>
 						</c:if>
 					</ul>

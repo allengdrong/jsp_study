@@ -37,8 +37,16 @@ public class AuthorityFilter implements Filter {
 		authMap.put("/notice/updateForm.jsp", 9);
 		authMap.put("/notice/update.jsp", 9);
 		authMap.put("/notice/delete.jsp", 9);
+		
+		// 이미지 게시판 - 등록, 수정, 삭제 - 회원 : 1
+		authMap.put("/image/writeForm.jsp", 1);
+		authMap.put("/image/write.jsp", 1);
+		authMap.put("/image/updateForm.jsp", 1);
+		authMap.put("/image/update.jsp", 1);
+		authMap.put("/image/delete.jsp", 1);
+		
 		// 질문답변 - 리스트, 보기, 질문하기, 답변하기, 수정, 삭제 : 1 --> 일반회원도 답변이 가능한 시스템
-		authMap.put("/qna/list.jsp", 1);
+		// authMap.put("/qna/list.jsp", 1);
 		authMap.put("/qna/view.jsp", 1);
 		authMap.put("/qna/questionForm.jsp", 1);
 		authMap.put("/qna/question.jsp", 1);
@@ -47,6 +55,7 @@ public class AuthorityFilter implements Filter {
 		authMap.put("/qna/updateForm.jsp", 1);
 		authMap.put("/qna/update.jsp", 1);
 		authMap.put("/qna/delete.jsp", 1);
+		
 		// 메시지 - 리스트, 보기, 보내기, 삭제 : 1
 		authMap.put("/message/list.jsp", 1);
 		authMap.put("/message/view.jsp", 1);

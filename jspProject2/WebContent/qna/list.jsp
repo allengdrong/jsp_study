@@ -1,5 +1,5 @@
-<%@page import="com.webjjang.main.controller.Beans"%>
 <%@page import="com.webjjang.util.filter.AuthorityFilter"%>
+<%@page import="com.webjjang.main.controller.Beans"%>
 <%@page import="com.webjjang.main.controller.ExeService"%>
 <%@page import="com.webjjang.qna.vo.QnaVO"%>
 <%@page import="java.util.List"%>
@@ -15,24 +15,23 @@
 Long curPage = 1L;
 Long perPageNum = 10L;
 
-// 넘어오는 데이터 받기 - 페이지, 한페이지당 데이터의 갯수
+// 넘어오는 데이터 받기 - 페이지, 한페이지당 데이터 갯수
 String strCurPage = request.getParameter("page");
 String strPerPageNum = request.getParameter("perPageNum");
 
 // pageObject 생성
 PageObject pageObject = new PageObject();
 
-// 넘어오는 데이터가 있으면 pageObject의 페이지와 한페이지당 표시 데이터 갯수의  기본 정보를 바꾼다.
-if(strCurPage != null) curPage = Long.parseLong(strCurPage);
-	pageObject.setPage(curPage);
+// 넘어오는 데이터가 있으면 pageObject의 페이지와 한페이지당 표시 데이터 갯수의 기본 정보를 바꾼다.
+if(strCurPage != null) curPage =  Long.parseLong(strCurPage);
+pageObject.setPage(curPage);
 if(strPerPageNum != null) perPageNum = Long.parseLong(strPerPageNum);
-	pageObject.setPerPageNum(perPageNum);
-	
+pageObject.setPerPageNum(perPageNum);
+
 // DB에서 데이터 가져오기
 @SuppressWarnings("unchecked")
 List<QnaVO> list = (List<QnaVO>) ExeService.execute(Beans.get(AuthorityFilter.url), pageObject);
 
-	
 // 서버 객체에 저장
 request.setAttribute("list", list);
 request.setAttribute("pageObject", pageObject);
@@ -44,6 +43,25 @@ request.setAttribute("pageObject", pageObject);
 <meta charset="UTF-8">
 <title>질문답변 리스트</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style type="text/css">
+.dataRow:hover{
+	cursor: pointer;
+	background: #eee;
+}
+</style>
+
+<script type="text/javascript">
+$(function(){ // 문서가 로딩이 다된 후에 처리하도록 한다.
+	$(".dataRow").click(function(){
+		// alert("click");
+		// 보기 페이지로 이동
+		var no = $(this).find(".no").text();
+		location = "view.jsp?no=" + no + "&inc=1";
+	});
+});
+</script>
+
 </head>
 <body>
 <div class="container">
@@ -57,8 +75,8 @@ request.setAttribute("pageObject", pageObject);
 			<th>조회수</th>
 		</tr>
 		<c:forEach items="${list }" var="vo">
-			<tr>
-				<td>${vo.no }</td>
+			<tr class="dataRow">
+				<td class="no">${vo.no }</td>
 				<td>
 					<c:forEach begin="1" end="${vo.levNo }">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c:forEach>
 					<c:if test="${vo.levNo > 0 }">

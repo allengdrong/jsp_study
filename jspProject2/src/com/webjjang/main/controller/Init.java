@@ -11,6 +11,8 @@ import com.webjjang.board.service.BoardListService;
 import com.webjjang.board.service.BoardUpdateService;
 import com.webjjang.board.service.BoardViewService;
 import com.webjjang.board.service.BoardWriteService;
+import com.webjjang.image.dao.ImageDAO;
+import com.webjjang.image.service.ImageWriteService;
 import com.webjjang.member.dao.MemberDAO;
 import com.webjjang.member.service.MemberGradeModifyService;
 import com.webjjang.member.service.MemberListService;
@@ -25,8 +27,10 @@ import com.webjjang.notice.dao.NoticeDAO;
 import com.webjjang.notice.service.NoticeListService;
 import com.webjjang.notice.service.NoticeWriteService;
 import com.webjjang.qna.dao.QnaDAO;
+import com.webjjang.qna.service.QnaAnswerService;
 import com.webjjang.qna.service.QnaListService;
 import com.webjjang.qna.service.QnaQuestionService;
+import com.webjjang.qna.service.QnaViewService;
 
 /**
  * Servlet implementation class Init
@@ -78,6 +82,16 @@ public class Init extends HttpServlet {
 		// service에 dao 넣기 - 조립
 		Beans.get("/notice/list.jsp").setDAO(Beans.getDAO("noticeDAO"));
 		Beans.get("/notice/write.jsp").setDAO(Beans.getDAO("noticeDAO"));
+		
+		// 이미지 게시판 객체를 생성 후 저장 ====================================
+		// dao 생성 저장
+		Beans.putDAO("imageDAO", new ImageDAO());
+		// service 생성 저장
+		// Beans.put("/image/list.jsp", new ImageListService());
+		Beans.put("/image/write.jsp", new ImageWriteService());
+		// service에 dao 넣기 - 조립
+		// Beans.get("/image/list.jsp").setDAO(Beans.getDAO("imageDAO"));
+		Beans.get("/image/write.jsp").setDAO(Beans.getDAO("imageDAO"));
 
 		// 질문답변 객체를 생성 후 저장 ====================================
 		// dao 생성 저장
@@ -85,31 +99,36 @@ public class Init extends HttpServlet {
 		// service 생성 저장
 		Beans.put("/qna/list.jsp", new QnaListService());
 		Beans.put("/qna/question.jsp", new QnaQuestionService());
+		Beans.put("/qna/view.jsp", new QnaViewService());
+		Beans.put("/qna/answer.jsp", new QnaAnswerService());
 		// service에 dao 넣기 - 조립
 		Beans.get("/qna/list.jsp").setDAO(Beans.getDAO("qnaDAO"));
 		Beans.get("/qna/question.jsp").setDAO(Beans.getDAO("qnaDAO"));
-
+		Beans.get("/qna/view.jsp").setDAO(Beans.getDAO("qnaDAO"));
+		Beans.get("/qna/answer.jsp").setDAO(Beans.getDAO("qnaDAO"));
 		
 		// 메시지 객체를 생성 후 저장 ====================================
 		// dao 생성 저장
+		// MessageDAO를 생성해서 key = "messageDAO"로 Beans에 저장해 놓는다.
 		Beans.putDAO("messageDAO", new MessageDAO());
 		// service 생성 저장
 		Beans.put("/message/list.jsp", new MessageListService());
-		// MessageWriteService를 생성해서 key="/message/write.jsp" Beans에 저장을 해 놓는다.
+		//MessageWriteService 를 생성해서  key="/message/write.jsp" Beans에 저장을 해 놓는다.
 		Beans.put("/message/write.jsp", new MessageWriteService());
-		// MessageViewService를 생성해서 key="/message/view.jsp" Beans에 저장을 해 놓는다.
+		//MessageViewService 를 생성해서  key="/message/view.jsp" Beans에 저장을 해 놓는다.
 		Beans.put("/message/view.jsp", new MessageViewService());
+		Beans.put("/message/delete.jsp", new MessageDeleteService());
+		
 		// service에 dao 넣기 - 조립
 		Beans.get("/message/list.jsp").setDAO(Beans.getDAO("messageDAO"));
-		// Beans에서 key="/message/write.jsp"로 저장해 놓은 것을 꺼낸다. --> MessageWriteService 객체
-		// Beans에서 key= "messageDAO"로 저장해 놓은 것을 꺼낸다. -> MessageDAO 객체
-		// 주의 : key 가 다르면 null이 나온다. -> NullPointException이 나온다. (대소문자 주의)
+		// Beans에서 key="/message/write.jsp"로 저장해 놓은 것은 꺼낸다. --> MessageWriteService 객체
+		// Beans에서 key = "messageDAO"로 저장해 놓은 것은 꺼낸다. -> MessageDAO 객체
+		// 주의 : key 가 다르면 null이 나온다. -> NullPointException 나온다.
 		Beans.get("/message/write.jsp").setDAO(Beans.getDAO("messageDAO"));
-		// Beans에서 key="/message/view.jsp"로 저장해 놓은 것을 꺼낸다. --> MessageViewService 객체
-		// Beans에서 key= "messageDAO"로 저장해 놓은 것을 꺼낸다. -> MessageDAO 객체
-		// 주의 : key 가 다르면 null이 나온다. -> NullPointException이 나온다. (대소문자 주의)
+		// Beans에서 key="/message/view.jsp"로 저장해 놓은 것은 꺼낸다. --> MessageViewService 객체
+		// Beans에서 key = "messageDAO"로 저장해 놓은 것은 꺼낸다. -> MessageDAO 객체
+		// 주의 : key 가 다르면 null이 나온다. -> NullPointException 나온다.
 		Beans.get("/message/view.jsp").setDAO(Beans.getDAO("messageDAO"));
-		Beans.put("/message/delete.jsp", new MessageDeleteService());
 		Beans.get("/message/delete.jsp").setDAO(Beans.getDAO("messageDAO"));
 
 		// 회원 관리 객체를 생성 후 저장 ====================================
