@@ -43,6 +43,7 @@ public class AuthorityFilter implements Filter {
 		authMap.put("/image/write.jsp", 1);
 		authMap.put("/image/updateForm.jsp", 1);
 		authMap.put("/image/update.jsp", 1);
+		authMap.put("/image/updateFile.jsp", 1);
 		authMap.put("/image/delete.jsp", 1);
 		
 		// 질문답변 - 리스트, 보기, 질문하기, 답변하기, 수정, 삭제 : 1 --> 일반회원도 답변이 가능한 시스템

@@ -48,10 +48,34 @@ public class DBSQL {
 	+ " values(notice_seq.nextval, ?, ?, ?, ?) ";
 
 	// 이미지 게시판 쿼리
+	// 1. 리스트 - 번호, 제목, 작성자이름(작성자ID), 작성일, 파일이름
+		public static final String IMAGE_LIST 
+		= "select rnum, no, title, name, id, "
+		+ " to_char(writeDate, 'yyyy.mm.dd') writeDate, fileName "
+		+ " from( "
+			+ " select rownum rnum, no, title, name, id, writeDate, fileName from ("
+				+ " select i.no, i.title, m.name, i.id, i.writeDate, i.fileName "
+				+ " from image i, member m "
+				+ " where i.id = m.id "
+				+ " order by no desc "
+			+ " ) "
+		+ ") where rnum between ? and ?  ";
+	// 1-1. 전체 데이터 갯수 - 페이지 처리 : 리스트
+	public static final String IMAGE_GET_TOTALROW
+	= " select count(*) from image ";
+	// 2. 이미지 보기 - 번호, 제목, 내용, 이름, 아이디, 작성일, 파일면
+	public static final String IMAGE_VIEW
+	= " select i.no, i.title, i.content, m.name, i.id, "
+			+ " to_char(i.writeDate, 'yyyy.dd.mm') writeDate, i.fileName "
+			+ " from image i, member m "
+			+ " where (no = ?) and (i.id = m.id) ";
 	// 3. 이미지 등록 - 번호, 제목, 내용, 작성자 ID, 파일명
 	public static final String IMAGE_WRITE 
 	= " insert into image(no, title, content, id, fileName) "
 	+ " values(image_seq.nextval, ?, ?, ?, ?) ";
+	// 4-1. 이미지 파일정보 수정 - 번호, 제목, 내용, 작성자 ID, 파일명
+	public static final String IMAGE_UPDATE_FILE 
+	= " update image set fileName = ? where no = ? ";
 
 	
 	// QnA 쿼리

@@ -12,6 +12,9 @@ import com.webjjang.board.service.BoardUpdateService;
 import com.webjjang.board.service.BoardViewService;
 import com.webjjang.board.service.BoardWriteService;
 import com.webjjang.image.dao.ImageDAO;
+import com.webjjang.image.service.ImageListService;
+import com.webjjang.image.service.ImageUpdateFileService;
+import com.webjjang.image.service.ImageViewService;
 import com.webjjang.image.service.ImageWriteService;
 import com.webjjang.member.dao.MemberDAO;
 import com.webjjang.member.service.MemberGradeModifyService;
@@ -87,11 +90,15 @@ public class Init extends HttpServlet {
 		// dao 생성 저장
 		Beans.putDAO("imageDAO", new ImageDAO());
 		// service 생성 저장
-		// Beans.put("/image/list.jsp", new ImageListService());
+		Beans.put("/image/list.jsp", new ImageListService());
 		Beans.put("/image/write.jsp", new ImageWriteService());
+		Beans.put("/image/view.jsp", new ImageViewService());
+		Beans.put("/image/updateFile.jsp", new ImageUpdateFileService());
 		// service에 dao 넣기 - 조립
-		// Beans.get("/image/list.jsp").setDAO(Beans.getDAO("imageDAO"));
+		Beans.get("/image/list.jsp").setDAO(Beans.getDAO("imageDAO"));
 		Beans.get("/image/write.jsp").setDAO(Beans.getDAO("imageDAO"));
+		Beans.get("/image/view.jsp").setDAO(Beans.getDAO("imageDAO"));
+		Beans.get("/image/updateFile.jsp").setDAO(Beans.getDAO("imageDAO"));
 
 		// 질문답변 객체를 생성 후 저장 ====================================
 		// dao 생성 저장
