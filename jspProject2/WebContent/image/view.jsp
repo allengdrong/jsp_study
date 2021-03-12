@@ -5,6 +5,8 @@
 <%@page import="com.webjjang.image.vo.ImageVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%
 // 자바
 // 넘어오는 데이터 받기 - 번호[, 페이지, 한페이지당 이미지 갯수]
@@ -83,11 +85,16 @@ var imageExt = ["JPG", "JPEG", "GIF", "PNG"];
 	<table class = "table">
 		<tr>
 			<td colspan="2">
-				<a href="updateForm.jsp?no=${vo.no }" class="btn btn-default">수정(제목,내용)</a>
-				<button type="button" class="btn btn-default" 
-				data-toggle="modal" data-target="#myModal">파일바꾸기</button>
-				<a href="delete.jsp?no=${vo.no }" class="btn btn-default">삭제</a>
-				<a href="list.jsp?no=${vo.no }" class="btn btn-default">리스트</a>
+				<c:if test="${vo.id == login.id || login.gradeNo == 9}">
+					<!-- 작성자가 로그인한 사람인 회원인 경우와 관리자에게만 나타나는 메뉴 -->
+					<a href="updateForm.jsp?no=${vo.no }" class="btn btn-default">수정(제목,내용)</a>
+					<button type="button" class="btn btn-default" 
+					data-toggle="modal" data-target="#myModal">파일바꾸기</button>
+					<a href="delete.jsp?no=${vo.no }&perPageNum=${param.perPageNum}&deleteFile=${vo.fileName}" class="btn btn-default">삭제</a>
+				</c:if>
+				<!-- EL 객체 - param.page -> request.getParameter("") -->
+				<a href="list.jsp?page=${param.page }&perPageNum=${param.perPageNum}" 
+				class="btn btn-default">리스트</a>
 			</td>
 		</tr>
 		<tr>
@@ -135,6 +142,9 @@ var imageExt = ["JPG", "JPEG", "GIF", "PNG"];
         <p>바꿀 이미지 파일을 선택하세요.</p>
         <form action="updateFile.jsp" method="post" enctype="multipart/form-data" 
         id="updateFileForm">
+        <!--  페이지 정보를 숨겨서 넘긴다. -->
+        <input name="page" value="${param.page }" type="hidden"/>
+        <input name="perPageNum" value="${param.perPageNum }" type="hidden"/>
 			<div class="form-group">
 				<label for="no">번호</label>
 				<input name="no" id="no" class="form-control" 

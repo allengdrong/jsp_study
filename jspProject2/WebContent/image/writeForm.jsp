@@ -53,6 +53,7 @@ $(function(){
 	<!-- 파일첨부를 하는 입력에는 반드시 post방식이어야 하고 enctype 을 지정해야만 한다.
 	input tag의 type="file"로 지정한다. -->
 		<form action="write.jsp" method="post" enctype="multipart/form-data" id="writeForm">
+		<input name="perPageNum" value="${param.perPageNum }" type="hidden">
 			<div class="form-group">
 				<label for="title">제목</label>
 				<input name="title" id="title" class="form-control" />

@@ -73,9 +73,12 @@ public class DBSQL {
 	public static final String IMAGE_WRITE 
 	= " insert into image(no, title, content, id, fileName) "
 	+ " values(image_seq.nextval, ?, ?, ?, ?) ";
-	// 4-1. 이미지 파일정보 수정 - 번호, 제목, 내용, 작성자 ID, 파일명
+	// 4-1. 이미지 파일정보 수정 - 번호, 제목, 내용, 작성자 ID, 파일명 - 파일 바꾸기
 	public static final String IMAGE_UPDATE_FILE 
 	= " update image set fileName = ? where no = ? ";
+	// 5. 이미지게시판 삭제
+	public static final String IMAGE_DELETE 
+	= " delete from image where no = ? ";
 
 	
 	// QnA 쿼리
