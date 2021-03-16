@@ -69,6 +69,8 @@ $(function(){ // jquery에서 익명함수를 전달해서 저장해놨다가 Do
 <div class="container">
 <h1>게시판 글쓰기</h1>
 <form action="write.do" id="writeForm" method="post">
+<!-- 페이지에 대한 정보 넘기기 -->
+<input name="perPageNum" type="hidden" value="${pageObject.perPageNum }">
 <div class="form-group">
 	<label for="title">제목</label>
 	<input name="title" id="title" class="form-control" required="required"

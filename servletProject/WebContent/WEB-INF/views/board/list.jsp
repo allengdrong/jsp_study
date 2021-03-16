@@ -34,7 +34,8 @@ $(function(){ // jquery에서 익명함수를 전달해서 저장해놨다가 Do
 		// .text(data) : 객체(태그) 사이에 문자를 셋팅한다.
 		var no = $(this).find(".no").text();
 		// 조회수 1 증가를 위해 inc=1을 넘긴다.
-		location = "view.do?no=" + no + "&inc=1";
+		location = "view.do?no=" + no + "&inc=1&page=${pageObject.page}"
+				+"&perPageNum=${pageObject.perPageNum}";
 	});
 });
 </script>
@@ -75,7 +76,7 @@ $(function(){ // jquery에서 익명함수를 전달해서 저장해놨다가 Do
 		</tr>
 		<tr>
 			<td colspan="5">
-				<a href="writeForm.do" class="btn btn-default">글쓰기</a>
+				<a href="writeForm.do?perPageNum=${pageObject.perPageNum }" class="btn btn-default">글쓰기</a>
 			</td>
 		</tr>
 	</tfoot>

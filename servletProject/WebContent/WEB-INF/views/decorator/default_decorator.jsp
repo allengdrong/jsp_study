@@ -7,7 +7,7 @@
 	uri="http://www.opensymphony.com/sitemesh/decorator"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
-System.out.println("default_decorator.jsp [path] : " + request.getContextPath());
+System.out.println("default_decorator.do [path] : " + request.getContextPath());
 request.setAttribute("path", request.getContextPath());
 %>
 <!DOCTYPE html>
@@ -91,14 +91,14 @@ article {
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
-						<li><a href="${path }/notice/list.jsp">공지사항</a></li>
-						<li><a href="${path }/image/list.jsp">이미지</a></li>
-						<li><a href="${path }/board/list.jsp">게시판</a></li>
+						<li><a href="${path }/notice/list.do">공지사항</a></li>
+						<li><a href="${path }/image/list.do">이미지</a></li>
+						<li><a href="${path }/board/list.do">게시판</a></li>
 						<!-- $amp; : &, &lt; : <, &gt; : >. &ndsp; : blank -->
-						<li><a href="${path }/qna/list.jsp">Q&amp;A</a></li>
+						<li><a href="${path }/qna/list.do">Q&amp;A</a></li>
 						<c:if test="${!empty login }">
 						<!-- 로그인 되어 있는 경우의 메뉴 -->
-						<li><a href="${path }/message/list.jsp">메시지</a></li>
+						<li><a href="${path }/message/list.do">메시지</a></li>
 						</c:if>
 					</ul>
 					<!-- 메인 메뉴 부분의 로그인 사용자 정보 -->
@@ -109,7 +109,7 @@ article {
 	     						<a href="#"><span class="glyphicon glyphicon-user"></span> 회원가입</a>
 	     					</li>
 	     					<li>
-	     						<a href="${path }/member/loginForm.jsp"><span class="glyphicon glyphicon-log-in"></span>로그인</a>
+	     						<a href="${path }/member/loginForm.do"><span class="glyphicon glyphicon-log-in"></span>로그인</a>
 	     					</li>
      					</c:if>
 							<!-- 로그인이 되어 있는 경우의 메뉴 -->
@@ -118,7 +118,7 @@ article {
 	     					 	<a href="#"><span class="glyphicon glyphicon-user"></span> ${login.name }</a>
 	     					</li>
 	     					<li>
-	     						<a href="${path }/member/logout.jsp"><span class="glyphicon glyphicon-log-out"></span>로그아웃</a>
+	     						<a href="${path }/member/logout.do"><span class="glyphicon glyphicon-log-out"></span>로그아웃</a>
 	     					</li>
      					</c:if>
     				</ul>

@@ -28,6 +28,7 @@ import com.webjjang.message.service.MessageDeleteService;
 import com.webjjang.message.service.MessageListService;
 import com.webjjang.message.service.MessageViewService;
 import com.webjjang.message.service.MessageWriteService;
+import com.webjjang.notice.controller.NoticeController;
 import com.webjjang.notice.dao.NoticeDAO;
 import com.webjjang.notice.service.NoticeListService;
 import com.webjjang.notice.service.NoticeWriteService;
@@ -63,6 +64,7 @@ public class Init extends HttpServlet {
 		// 게시판 객체를 생성 후 저장 ====================================
 		// controller 생성 저장
 		Beans.putController("/board", new BoardController());
+		Beans.putController("/notice", new NoticeController());
 		
 		// dao 생성 저장
 		Beans.putDAO("boardDAO", new BoardDAO());
@@ -82,6 +84,7 @@ public class Init extends HttpServlet {
 		Beans.get("/board/delete.do").setDAO(Beans.getDAO("boardDAO"));
 		
 		// 공지사항 객체를 생성 후 저장 ====================================
+		
 		// dao 생성 저장
 		Beans.putDAO("noticeDAO", new NoticeDAO());
 		// service 생성 저장

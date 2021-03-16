@@ -1,28 +1,13 @@
-<%@page import="com.webjjang.board.vo.BoardVO"%>
-<%@page import="com.webjjang.main.controller.ExeService"%>
-<%@page import="com.webjjang.main.controller.Beans"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%
-// 자바 부분입니다.
-// 1. 넘어오는 데이터 받기 - 글번호
-String strNo = request.getParameter("no");
-long no = Long.parseLong(strNo);
-// 조회수 1증가하는 부분은 inc=0으로 강제 셋팅해서 넘긴다.
-// 2. 글번호에 맞는 데이터 가져오기 -> BoardViewService => /board/view.jsp
-String url = "/board/view.jsp"; // 현재 URL과 다르므로 강제 셋팅했다.
-BoardVO vo = (BoardVO) ExeService.execute(Beans.get(url), new Long[]{no, 0L});
 
-// 3. 서버 객체에 넣기
-request.setAttribute("vo", vo);
-%>
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>게시판 글쓰기</title>
+<title>게시판 글수정폼</title>
   
   <!-- 부트스트랩 라이브러리 등록 - CDN 방식 -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -85,7 +70,9 @@ $(function(){ // jquery에서 익명함수를 전달해서 저장해놨다가 Do
 <body>
 <div class="container">
 <h1>게시판 글수정</h1>
-<form action="update.jsp" id="writeForm" method="post">
+<form action="update.do" id="writeForm" method="post">
+<input name="page" type="hidden" />
+<input name="perPageNum" type="hidden" value="${pageObject.perPageNum }" />
 <div class="form-group">
 	<label for="no">번호</label>
 	<input name="no" id="no" class="form-control" readonly="readonly" value="${vo.no}"/>

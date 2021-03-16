@@ -20,15 +20,18 @@ public class BoardController implements Controller {
 	public String execute(HttpServletRequest request) throws Exception {
 		System.out.println("BoardController.execute()");
 
+		// 페이지를 위한 처리
+		PageObject pageObject = PageObject.getInstance(request);
+		request.setAttribute("pageObject", pageObject); // 페이지를 보여주기 위해 서버객체에 담는다.
+		
 		switch (AuthorityFilter.url) {
 		// 1. 게시판 리스트
 		case "/" + MODULE + "/list.do":
 			// service - dao -- request에 저장 까지 해준다.
-			list(request);
+			list(request, pageObject);
 
 			// "board/list" 넘긴다. -> WEB-INF/views/ + board/list + .jsp를 이용해서 HTML을 만든다.
 			jspInfo = MODULE + "/list";
-
 			break;
 
 		// 2. 게시판 글보기
@@ -38,7 +41,6 @@ public class BoardController implements Controller {
 
 			// "board/view" 넘긴다. -> WEB-INF/views/ + board/view + .jsp를 이용해서 HTML을 만든다.
 			jspInfo = MODULE + "/view";
-
 			break;
 
 		// 3-1. 게시판 글쓰기 폼
@@ -53,45 +55,51 @@ public class BoardController implements Controller {
 			write(request);
 
 			// "board/view" 넘긴다. -> WEB-INF/views/ + board/view + .jsp를 이용해서 HTML을 만든다.
-			jspInfo = "redirect:list.do";
+			jspInfo = "redirect:list.do?page=1&perPageNum=" + pageObject.getPerPageNum();
+			break;
+
+		// 4-1. 게시판 글 수정 폼
+		case "/" + MODULE + "/updateForm.do":
+			updateForm(request);
+			// "board/view" 넘긴다. -> WEB-INF/views/ + board/view + .jsp를 이용해서 HTML을 만든다.
+			jspInfo = MODULE + "/updateForm";
+			break;
+
+		// 4-2. 게시판 글수정 처리
+		case "/" + MODULE + "/update.do":
+			// service - dao -- request에 저장 까지 해준다.
+			Long no = update(request);
+			// "board/view" 넘긴다. -> view.do로 자동으로 이동
+			jspInfo = "redirect:view.do?no=" + no + "&inc=0&page=" + pageObject.getPage() 
+			+ "&perPageNum" + pageObject.getPerPageNum();
+			break;
+			
+		// 5. 게시판 글삭제 처리
+		case "/" + MODULE + "/delete.do":
+			// service - dao -- request에 저장 까지 해준다.
+			delete(request);
+			// list.do로 자동으로 이동
+			jspInfo = "redirect:list.do?page=1&perPageNum=" + pageObject.getPerPageNum();
 			break;
 
 		default:
-			break;
+			throw new Exception("페이지 오류 404 - 존재하지 않는 페이지 입니다.");
+			
 		}
 		// jsp의 정보를 가지고 리턴한다.
 		return jspInfo;
 	}
 
 	// 1. 게시판 리스트 처리.
-	private void list(HttpServletRequest request) throws Exception {
+	private void list(HttpServletRequest request, PageObject pageObject) throws Exception {
 		// 여기가 자바 코드입니다. servlet-controller(*)-Service-DAO
 
-		// 페이지 처리를 위한 프로그램
-		// 페이지 처리를 위한 객체 사용
-		PageObject pageObject = new PageObject();
-		// 페이지에 대한 정보를 받는다.
-		// page는 jsp에서 기본객체로 사용하고 있다. -> 페이지의 정보가 담겨져 있다.
-		String strCurPage = request.getParameter("page");
-		// 넘어오는 페이지가 있는 경우는 넘어오는 페이지를 현재 페이지로 셋팅. 그렇지 않으면 1이 셋팅된다.
-		if (strCurPage != null)
-			pageObject.setPage(Integer.parseInt(strCurPage));
-		// 한페이지에 표시할 데이터의 수를 받는다.
-		String strPerPageNum = request.getParameter("perPageNum");
-		// 한 페이지당 표시할 데이터의 수가 안넘어오면 10으로 셋팅된다. 넘어오면 넘어 오는 데이터를 사용한다.
-		if (strPerPageNum != null)
-			pageObject.setPerPageNum(Integer.parseInt(strPerPageNum));
-		// 넘어온 데이터 확인
-		System.out.println("BoardController.execute() [page = " + strCurPage + ", perPageNum = " + strPerPageNum + "]");
-		// PageObject - 확인
-		System.out.println("BoardController.execute() [pageObject = " + pageObject + " ]");
-
-		String url = request.getServletPath();
+		// request.getServletPath();
 		@SuppressWarnings("unchecked")
-		List<BoardVO> list = (List<BoardVO>) ExeService.execute(Beans.get(url), pageObject);
+		List<BoardVO> list = (List<BoardVO>) ExeService.execute(Beans.get(AuthorityFilter.url), pageObject);
 		// 서버객체 request에 담는다.
 		request.setAttribute("list", list);
-		request.setAttribute("pageObject", pageObject); // 페이지를 보여주기 위해 서버객체에 담는다.
+		
 
 	}
 
@@ -114,7 +122,7 @@ public class BoardController implements Controller {
 	}
 
 	// 3. 게시판 글쓰기 처리
-	private void write (HttpServletRequest request) throws Exception {
+	private void write(HttpServletRequest request) throws Exception {
 		// 1. 데이터 수집
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
@@ -129,5 +137,59 @@ public class BoardController implements Controller {
 		Integer result = (Integer) ExeService.execute(Beans.get(AuthorityFilter.url), vo);
 
 		System.out.println("BoardController.write().result : " + result);
+	}
+
+	// 4-1. 게시판 글수정 폼
+	private void updateForm(HttpServletRequest request) throws Exception {
+		// 자바 부분입니다.
+		// 1. 넘어오는 데이터 받기 - 글번호
+		String strNo = request.getParameter("no");
+		long no = Long.parseLong(strNo);
+		// 조회수 1증가하는 부분은 inc=0으로 강제 셋팅해서 넘긴다.
+		// 2. 글번호에 맞는 데이터 가져오기 -> BoardViewService => /board/view.jsp
+		String url = "/board/view.do"; // 현재 URL과 다르므로 강제 셋팅했다.
+		BoardVO vo = (BoardVO) ExeService.execute(Beans.get(url), new Long[] { no, 0L });
+
+		// 3. 서버 객체에 넣기
+		request.setAttribute("vo", vo);
+	}
+
+	// 4-2. 게시판 글수정 처리
+	private Long update(HttpServletRequest request) throws Exception {
+		// 1. 데이터 수집
+		String strNo = request.getParameter("no");
+		long no = Long.parseLong(strNo);
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
+		String writer = request.getParameter("writer");
+
+		BoardVO vo = new BoardVO();
+		vo.setNo(no);
+		vo.setTitle(title);
+		vo.setContent(content);
+		vo.setWriter(writer);
+
+		// 2. DB 처리 - update.jsp -> service -> dao
+		String url = request.getServletPath();
+		Integer result = (Integer) ExeService.execute(Beans.get(url), vo);
+
+		if (result < 1)
+			throw new Exception("게시판 글수정 - 수정할 데이터가 존재하지 않습니다.");
+		
+		return no;
+		
+	}
+	
+	// 5. 게시판 글삭제 처리
+	private void delete(HttpServletRequest request) throws Exception {
+		// 1. 데이터 수집
+		String strNo = request.getParameter("no");
+		long no = Long.parseLong(strNo);
+
+		// 2. DB 처리 - delete.jsp -> service -> dao
+		String url = request.getServletPath();
+		Integer result = (Integer) ExeService.execute(Beans.get(url), no);
+		if(result == 0 ) throw new Exception("게시판 글삭제 오류 - 존재하지 않는 글은 삭제할수 없습니다.");
+
 	}
 }

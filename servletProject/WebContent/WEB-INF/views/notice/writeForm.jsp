@@ -10,7 +10,8 @@
 <body>
 <div class="container">
 	<h1>공지 등록</h1>
-	<form action="write.jsp" method="post">
+	<form action="write.do" id="writeForm" method="post">
+	<input name="perPageNum" type="hidden" value="${pageObject.perPageNum }">
 		<div class="form-group">
 			<label for="title">제목</label>
 			<input name="title" id="title" class="form-control">

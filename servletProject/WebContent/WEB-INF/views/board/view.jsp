@@ -63,10 +63,10 @@ $(function(){ // jquery에서 익명함수를 전달해서 저장해놨다가 Do
 	<tfoot>
 		<tr>
 			<td colspan="2">
-				<a href="updateForm.do?no=${vo.no }" class="btn btn-default">글수정</a>
-				<a href="delete.do?no=${vo.no }" class="btn btn-default" 
+				<a href="updateForm.do?no=${vo.no }&page=${pageObject.page }&perPageNum=${pageObject.perPageNum}" class="btn btn-default">글수정</a>
+				<a href="delete.do?no=${vo.no }&perPageNum=${pageObject.perPageNum}" class="btn btn-default" 
 				 id="deleteBtn">글삭제</a>
-				<a href="list.do" class="btn btn-default">리스트</a>
+				<a href="list.do?page=${pageObject.page }&perPageNum=${pageObject.perPageNum}" class="btn btn-default">리스트</a>
 			</td>
 		</tr>
 	</tfoot>
