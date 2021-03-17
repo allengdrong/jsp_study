@@ -9,29 +9,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="pageObject" tagdir="/WEB-INF/tags" %>
-<%
-//넘어오는 데이터 받기
-long curPage = 1;
-long perPageNum = 10;
-String strCurPage = request.getParameter("page");
-String strPerPageNum = request.getParameter("perPageNum");
-PageObject pageObject = new PageObject();
-if(strCurPage != null) pageObject.setPage(Long.parseLong(strCurPage));
-if(strPerPageNum != null) pageObject.setPerPageNum(Long.parseLong(strPerPageNum));
 
-//내 아이디를 가져와서 pageObject에 저장을 해둔다.
-pageObject.setAccepter(((LoginVO) session.getAttribute("login")).getId());
-
-//DATA 가져오기
-@SuppressWarnings("unchecked")
-List<MessageVO> list = (List<MessageVO>) ExeService.execute(Beans.get(AuthorityFilter.url), pageObject);
-
-//서버 객체에 저장
-request.setAttribute("list", list);
-request.setAttribute("pageObject", pageObject);
-
-%>
-    
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,7 +37,7 @@ $(function(){
 		// alert("data 보기 클릭");
 		// $(this) : 자기 자신(이벤트가 일어 난 곳 - 현재는 tr). 클래스가 no인 객체를 찾기. 태그 안에 있는 글자 가져오기
 		var no = $(this).find(".no").text();
-		location = "view.jsp?no=" + no;
+		location = "view.do?no=" + no;
 	});
 });
 </script>
@@ -87,12 +65,12 @@ $(function(){
 	</c:forEach>
 	<tr>
 		<td colspan="5">
-			<pageObject:pageNav listURI="list.jsp" pageObject="${pageObject }" />
+			<pageObject:pageNav listURI="list.do" pageObject="${pageObject }" />
 		</td>
 	</tr>
 	<tr>
 		<td colspan="5">
-			<a href="writeForm.jsp" class="btn btn-default">메시지 보내기</a>
+			<a href="writeForm.do" class="btn btn-default">메시지 보내기</a>
 		</td>
 	</tr>
 </table>

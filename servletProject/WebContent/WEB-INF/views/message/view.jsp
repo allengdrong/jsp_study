@@ -6,30 +6,6 @@
 <%@page import="com.webjjang.member.vo.LoginVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-// 자바 부분
-// 넘어오는 데이터 받기 - 메시지 번호
-String strNo = request.getParameter("no");
-// Long no = Long.parseLong(strNo);
-
-// 내 아이디 정보를 꺼내야 한다.
-String id = ((LoginVO) session.getAttribute("login")).getId();
-
-// vo객체 생성 - 데이터 셋팅
-MessageVO vo = new MessageVO();
-vo.setNo(Long.parseLong(strNo));
-vo.setAccepter(id); // 받는 사람이 본인인 데이터를 읽기 표시 하기 위해서 accepter에 id 정보를 넣었다.
-
-// DB처리 데이터 가져오기
-
-// 1. 받은 사람이 로그인한 사람과 같아야 하고 번호가 같고 받은 날짜가 null인 메시지를 (읽지 않은) 
-//		읽음 표시를 한다. (acceptDate를 현재 날짜로 넣어준다. - update)
-// 2. 메시지 번호에 맞는 전체 메시지 정보 가져오기
-MessageVO viewVO = (MessageVO) ExeService.execute(Beans.get(AuthorityFilter.url), vo);
-
-// 서버 객체에 저장
-request.setAttribute("vo", viewVO);
-%>
 
 
 <!DOCTYPE html>
@@ -79,8 +55,8 @@ $(function(){ // jquery에서 익명함수를 전달해서 저장해놨다가 Do
 		</tr>
 		<tr>
 			<td colspan="5">
-				<a href="list.jsp" class="btn btn-info">메시지 리스트</a>
-				<a href="delete.jsp?no=${vo.no }" class="btn btn-default" 
+				<a href="list.do" class="btn btn-info">메시지 리스트</a>
+				<a href="delete.do?no=${vo.no }" class="btn btn-default" 
 				 id="deleteBtn">글삭제</a>
 			</td>
 		</tr>

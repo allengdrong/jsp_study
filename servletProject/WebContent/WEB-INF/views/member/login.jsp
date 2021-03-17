@@ -26,5 +26,5 @@ if(loginVO == null) throw new Exception("로그인 정보를 확인해 주세요
 
 // 로그인 처리
 session.setAttribute("login", loginVO);
-response.sendRedirect("../main/main.jsp");
+response.sendRedirect("../main/main.do");
 %>

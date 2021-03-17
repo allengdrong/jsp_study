@@ -27,7 +27,13 @@ public class NoticeDAO {
 			//1.2.
 			con = DBInfo.getConnection();
 			// 3.4.
-			pstmt = con.prepareStatement(DBSQL.NOTICE_LIST);
+			String period = pageObject.getPeriod();
+			String sql = "";
+			if(period.equals("pre")) sql = DBSQL.NOTICE_LIST_PRE;
+			else if(period.equals("old")) sql = DBSQL.NOTICE_LIST_OLD;
+			else if(period.equals("res")) sql = DBSQL.NOTICE_LIST_RES;
+			else if(period.equals("all")) sql = DBSQL.NOTICE_LIST_ALL;
+			pstmt = con.prepareStatement(sql);
 			pstmt.setLong(1, pageObject.getStartRow());
 			pstmt.setLong(2, pageObject.getEndRow());
 			//5. 
@@ -57,7 +63,7 @@ public class NoticeDAO {
 	}
 	
 	// 공지사항 전체 데이터 갯수 가져오기
-	public long getTotalRow() throws Exception{
+	public long getTotalRow(PageObject pageObject) throws Exception{
 		System.out.println("NoticeDAO.getTotalRow()");
 		long result = 0;
 		
@@ -65,7 +71,17 @@ public class NoticeDAO {
 			//1.2.
 			con = DBInfo.getConnection();
 			// 3.4.
-			pstmt = con.prepareStatement(DBSQL.NOTICE_GET_TOTALROW);
+			// 공지 구분을 처리하는 조건을 붙이기
+			String period = pageObject.getPeriod();
+			String sql = DBSQL.NOTICE_GET_TOTALROW;
+			if(period.equals("pre"))
+				sql += " where startDate < sysdate and endDate >= trunc(sysdate) ";
+			else if(period.equals("old"))
+				sql += " where endDate < trunc(sysdate) ";
+			else if(period.equals("res"))
+				sql += " where startDate > sysdate ";
+			else if(period.equals("all")) ;
+			pstmt = con.prepareStatement(sql);
 			//5. 
 			rs = pstmt.executeQuery();
 			//6.
@@ -81,26 +97,26 @@ public class NoticeDAO {
 		}
 		
 		return result;
-	} // enmd of getTotalRow()
+	} // end of getTotalRow()
 	
 	// 공지 등록 처리
 	public int write(NoticeVO vo) throws Exception {
 		int result = 0;
 		
 		try {
-			// 1. 2.
+			//1.2.
 			con = DBInfo.getConnection();
-			// 3. 4.
+			//3.4.
 			pstmt = con.prepareStatement(DBSQL.NOTICE_WRITE);
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getContent());
 			pstmt.setString(3, vo.getStartDate());
 			pstmt.setString(4, vo.getEndDate());
-			// 5.
+			//5.
 			result = pstmt.executeUpdate();
-			// 6.
-			System.out.println("NoticeDAO.write() - 공지 등록 완료");
-		}catch (Exception e) {
+			//6.
+			System.out.println("NOticeDAO.write() - 공지등록 완료~");
+		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			throw new Exception("공지 등록 DB 처리 중 오류");
@@ -109,6 +125,45 @@ public class NoticeDAO {
 		}
 		
 		return result;
-	} 
+	}
+	
+//	// 2. 공지사항 글보기
+//		public NoticeVO view(long no) throws Exception{
+//
+//			NoticeVO vo = null;
+//			
+//			try {
+//				//1. 드라이버 확인 + 2. 연결
+//				con = DBInfo.getConnection();
+//				//3. sql -> DBSQL + 4. 실행객체 + 데이터 셋팅
+//				pstmt = con.prepareStatement(DBSQL.NOTICE_VIEW);
+//				pstmt.setLong(1, no); // 시작 번호
+//				// 5. 실행 - 데이터 한개 반복문 필요 없음.
+//				rs = pstmt.executeQuery();
+//				// 6. 표시 -> 데이터담기
+//				if(rs != null && rs.next()) {
+//					vo = new NoticeVO();
+//					vo.setNo(rs.getLong("no"));
+//					vo.setTitle(rs.getString("title"));
+//					vo.setContent(rs.getString("content"));
+//					vo.setWriter(rs.getString("writer"));
+//					vo.setWriteDate(rs.getString("writeDate"));
+//					vo.setHit(rs.getLong("hit"));
+//				}
+//				
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//				// 개발자를 위해서 오류를 콘솔에 출력한다.
+//				e.printStackTrace();
+//				// 사용자를 위한 오류 처리
+//				throw new Exception("게시판 글보기 실행 중 DB 처리 오류");
+//			} finally {
+//				// 7. 닫기
+//				DBInfo.close(con, pstmt, rs);
+//			}
+//			
+//			return vo;
+//
+//		}
 	
 }

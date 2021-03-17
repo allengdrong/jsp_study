@@ -34,7 +34,10 @@ public class DispatcherServlet extends HttpServlet {
 		
 		// /board/list.do - /board : substring(0, 6(->indexOf("/",1))
 		// /qna/list.do - /qna : substring(0, 4(->indexOf("/",1))
-		String module = AuthorityFilter.url.substring(0, AuthorityFilter.url.indexOf("/", 1));
+		int endIndex = AuthorityFilter.url.indexOf("/", 1);
+		String module = "/main";
+		// module이 존재하면 바꾼다. "/main.do" : module이 존재하지 않는다. module변수에 있는 값은 바뀌지 않는다.
+		if (endIndex >= 0) module = AuthorityFilter.url.substring(0, endIndex);
 		
 		System.out.println("DispatcherServlet.service().module : " + module);
 		

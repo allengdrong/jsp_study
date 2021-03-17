@@ -15,7 +15,7 @@
 <body>
 <div class="container">
 <h1>로그인 폼[/member]</h1>
-<form action="login.jsp" method="post">
+<form action="login.do" method="post">
 	<div class="form-group">
 		<label for="id">아이디</label>
 		<input name="id" id="id" class="form-control" />

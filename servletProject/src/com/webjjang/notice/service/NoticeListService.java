@@ -30,8 +30,8 @@ public class NoticeListService implements Service{
 		// 넘어오는 데이터 확인
 		System.out.println("NoticeListService.obj : " + obj);
 		// 전체 데이터를 가져오기
-		long totalRow = dao.getTotalRow();
 		PageObject pageObject = (PageObject) obj;
+		long totalRow = dao.getTotalRow(pageObject);
 		pageObject.setTotalRow(totalRow);
 		// 전체 페이지 셋팅 후 페이지 객체 출력
 		System.out.println("NoticeListService.pageObject : " + pageObject);

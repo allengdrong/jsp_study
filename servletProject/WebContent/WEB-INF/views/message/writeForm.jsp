@@ -20,7 +20,7 @@ $(function(){
 <body>
 <div class="container">
 	<h1>메시지 보내기</h1>
-	<form action="write.jsp" method="post">
+	<form action="write.do" method="post">
 		<div class="form-group">
 			<label for="accepter">받는 사람 아이디</label>
 			<input name="accepter" id="accepter" class="form-control" />

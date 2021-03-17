@@ -28,9 +28,11 @@ public class DBSQL {
 	public static final String BOARD_GET_TOTALROW
 	= " select count(*) from board ";
 	
+	
 	// 공지사항 쿼리
 	// 1. 리스트 - 번호, 제목, 공지시작일, 공지종료일, 최근 수정일
-	public static final String NOTICE_LIST 
+	// 1-1. 모든 공지
+	public static final String NOTICE_LIST_ALL 
 	= "select rnum, no, title, "
 	+ " to_char(startDate, 'yyyy.mm.dd') startDate, "
 	+ " to_char(endDate, 'yyyy.mm.dd') endDate, "
@@ -41,45 +43,87 @@ public class DBSQL {
 			+ " order by no desc "
 		+ " ) "
 	+ ") where rnum between ? and ?  ";
+	// 1-2. 현재 공지
+	public static final String NOTICE_LIST_PRE
+	= "select rnum, no, title, "
+	+ " to_char(startDate, 'yyyy.mm.dd') startDate, "
+	+ " to_char(endDate, 'yyyy.mm.dd') endDate, "
+	+ " to_char(updateDate, 'yyyy.mm.dd') updateDate "
+	+ " from( "
+		+ " select rownum rnum, no, title, startDate, endDate, updateDate from ("
+			+ " select no, title, startDate, endDate, updateDate from notice "
+			+ " where startDate < sysdate and endDate >= trunc(sysdate) "
+			+ " order by no desc "
+		+ " ) "
+	+ ") where rnum between ? and ?  ";
+	// 1-3. 지난 공지
+	public static final String NOTICE_LIST_OLD 
+	= "select rnum, no, title, "
+	+ " to_char(startDate, 'yyyy.mm.dd') startDate, "
+	+ " to_char(endDate, 'yyyy.mm.dd') endDate, "
+	+ " to_char(updateDate, 'yyyy.mm.dd') updateDate "
+	+ " from( "
+		+ " select rownum rnum, no, title, startDate, endDate, updateDate from ("
+			+ " select no, title, startDate, endDate, updateDate from notice "
+			+ " where endDate < trunc(sysdate)"
+			+ " order by no desc "
+		+ " ) "
+	+ ") where rnum between ? and ?  ";
+	// 1-4. 예약공지
+	public static final String NOTICE_LIST_RES
+	= "select rnum, no, title, "
+	+ " to_char(startDate, 'yyyy.mm.dd') startDate, "
+	+ " to_char(endDate, 'yyyy.mm.dd') endDate, "
+	+ " to_char(updateDate, 'yyyy.mm.dd') updateDate "
+	+ " from( "
+		+ " select rownum rnum, no, title, startDate, endDate, updateDate from ("
+			+ " select no, title, startDate, endDate, updateDate from notice "
+			+ " where startDate > sysdate "
+			+ " order by no desc "
+		+ " ) "
+	+ ") where rnum between ? and ?  ";
 	public static final String NOTICE_GET_TOTALROW
 	= " select count(*) from notice ";
 	public static final String NOTICE_WRITE 
 	= " insert into notice(no, title, content, startDate, endDate) "
 	+ " values(notice_seq.nextval, ?, ?, ?, ?) ";
+	// 2. 공지사항 보기
+	public static final String NOTICE_VIEW
+	= "select no, title, content, ";
 
 	// 이미지 게시판 쿼리
-	// 1. 리스트 - 번호, 제목, 작성자이름(작성자ID), 작성일, 파일이름
-		public static final String IMAGE_LIST 
-		= "select rnum, no, title, name, id, "
-		+ " to_char(writeDate, 'yyyy.mm.dd') writeDate, fileName "
-		+ " from( "
-			+ " select rownum rnum, no, title, name, id, writeDate, fileName from ("
-				+ " select i.no, i.title, m.name, i.id, i.writeDate, i.fileName "
-				+ " from image i, member m "
-				+ " where i.id = m.id "
-				+ " order by no desc "
-			+ " ) "
-		+ ") where rnum between ? and ?  ";
+	// 1. 리스트 - 번호, 제목, 작성자이름(작성자ID), 작성일, 파일명
+	public static final String IMAGE_LIST 
+	= "select rnum, no, title, name, id, "
+	+ " to_char(writeDate, 'yyyy.mm.dd') writeDate, fileName "
+	+ " from( "
+		+ " select rownum rnum, no, title, name, id, writeDate, fileName from ("
+			+ " select i.no, i.title, m.name, i.id, i.writeDate, i.fileName "
+			+ " from image i, member m "
+			+ " where i.id = m.id "
+			+ " order by no desc "
+		+ " ) "
+	+ ") where rnum between ? and ?  ";
 	// 1-1. 전체 데이터 갯수 - 페이지 처리 : 리스트
 	public static final String IMAGE_GET_TOTALROW
 	= " select count(*) from image ";
-	// 2. 이미지 보기 - 번호, 제목, 내용, 이름, 아이디, 작성일, 파일면
+	// 2. 이미지 보기 - 번호, 제목, 내용, 이름, 아이디, 작성일, 파일명
 	public static final String IMAGE_VIEW
 	= " select i.no, i.title, i.content, m.name, i.id, "
 			+ " to_char(i.writeDate, 'yyyy.dd.mm') writeDate, i.fileName "
 			+ " from image i, member m "
-			+ " where (no = ?) and (i.id = m.id) ";
-	// 3. 이미지 등록 - 번호, 제목, 내용, 작성자 ID, 파일명
+			+ " where (no = ?) and (i.id = m.id) ";  
+	// 3. 이미지 등록 - 번호, 제목, 내용, 작성자ID, 파일명
 	public static final String IMAGE_WRITE 
 	= " insert into image(no, title, content, id, fileName) "
 	+ " values(image_seq.nextval, ?, ?, ?, ?) ";
-	// 4-1. 이미지 파일정보 수정 - 번호, 제목, 내용, 작성자 ID, 파일명 - 파일 바꾸기
+	// 4-1. 이미지 파일 정보 수정 - 파일 바꾸기
 	public static final String IMAGE_UPDATE_FILE 
 	= " update image set fileName = ? where no = ? ";
-	// 5. 이미지게시판 삭제
+	// 5. 이미지 게시판 삭제
 	public static final String IMAGE_DELETE 
 	= " delete from image where no = ? ";
-
+	
 	
 	// QnA 쿼리
 	// 1. 리스트 - 번호, 제목, 작성자이름(작성자ID), 작성일, 조회수, 들여쓰기
@@ -179,5 +223,10 @@ public class DBSQL {
 	// 회원등급 수정
 	public static final String MEMBER_GRADE_MODIFY
 	= "update member set gradeNo = ? where id = ?";
+	
+	// 회원가입
+	public static final String MEMBER_JOIN
+	= "insert into member(id, pw, name, gender, birth, tel, email from member)"
+			+ "values (?, ?, ?, ?, ?, ?, ?)";
 	
 }

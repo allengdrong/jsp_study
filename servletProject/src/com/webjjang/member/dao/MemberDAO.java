@@ -188,4 +188,24 @@ public class MemberDAO {
 		return vo;
 		// test
 	}
+	
+	// 4. 회원 가입
+	public int join(MemberVO vo) throws Exception {
+		int result = 0;
+		try {
+			
+			con = DBInfo.getConnection();
+			pstmt = con.prepareStatement(DBSQL.MEMBER_JOIN);
+			pstmt.setString(1, vo.Id());
+			pstmt.setString(2, vo.Pw());
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new Exception("회원 가입 처리중 DB 오류가 발생됨.");
+		} finally {
+			DBInfo.close(con, pstmt);
+		}
+		
+	}
 }

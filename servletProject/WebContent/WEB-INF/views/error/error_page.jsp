@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" isErrorPage="true"%>
+    pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="container">
-<h1>Error Page....</h1>
+<h1>Error Page...</h1>
 <div class="panel panel-default">
   <div class="panel-heading">에러 메시지</div>
   <div class="panel-body">${exception.message }</div>

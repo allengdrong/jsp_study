@@ -14,15 +14,15 @@ Service service = Beans.get(url);
 
 LoginVO loginVO = (LoginVO) session.getAttribute("login");
 // null이면  로그인이 안된 상태. 서버가 리스타트 되면 자동로그아웃 된다.
-System.out.println("/member/view.jsp [loginVO] : " + loginVO); 
+System.out.println("/member/view.do [loginVO] : " + loginVO); 
 //로그인이 안되어 있으면 loginForm.jsp로 가라.
 if(loginVO == null) {
-	response.sendRedirect("loginForm.jsp");
+	response.sendRedirect("loginForm.do");
 	return;
 }
 
 String id = loginVO.getId();
-System.out.println("/member/view.jsp [id] : " + id);
+System.out.println("/member/view.do [id] : " + id);
 
 //MemberVO memberVO = (MemberVO) ExeService.execute(Beans.get(url), id);
 
