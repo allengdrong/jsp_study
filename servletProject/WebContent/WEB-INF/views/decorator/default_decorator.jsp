@@ -72,6 +72,14 @@ article {
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
+		<c:if test ="${!empty login}">
+			getMessageCnt();
+			var myVar = setInterval(getMessageCnt, 3000);
+			function getMessageCnt(){
+				// 서버에 가서 사용자가 받은 새로운 메시지의 갯수를 가져오는 처리
+				$("#messageCnt").load("/ajax/getMessageCnt.do");
+			}
+		</c:if>
 	});
 </script>
 <decorator:head/>
@@ -102,26 +110,26 @@ article {
 						</c:if>
 					</ul>
 					<!-- 메인 메뉴 부분의 로그인 사용자 정보 -->
-					<ul class="nav navbar-nav navbar-right">
-						<c:if test="${empty login }">
-							<!-- 로그인이 안되어 있는 경우의 메뉴 -->
-	     					<li>
-	     						<a href="#"><span class="glyphicon glyphicon-user"></span> 회원가입</a>
-	     					</li>
-	     					<li>
-	     						<a href="${path }/member/loginForm.do"><span class="glyphicon glyphicon-log-in"></span>로그인</a>
-	     					</li>
-     					</c:if>
-							<!-- 로그인이 되어 있는 경우의 메뉴 -->
-     					<c:if test="${!empty login }">
-	     					<li>
-	     					 	<a href="#"><span class="glyphicon glyphicon-user"></span> ${login.name }</a>
-	     					</li>
-	     					<li>
-	     						<a href="${path }/member/logout.do"><span class="glyphicon glyphicon-log-out"></span>로그아웃</a>
-	     					</li>
-     					</c:if>
-    				</ul>
+				    <ul class="nav navbar-nav navbar-right">
+				      <c:if test="${empty login }">
+				      <!-- 로그인이 안되어 있는 경우의 메뉴 -->
+				      <li><a href="${path }/member/writeForm.do">
+				      	<span class="glyphicon glyphicon-user"></span> 회원가입</a>
+				      </li>
+				      <li><a href="${path }/member/loginForm.do"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+				      </c:if>
+				      <c:if test="${!empty login }">
+				      <!-- 로그인이 되어 있는 경우의 메뉴 -->
+				      <li>
+				      	<a href="">
+				      		<span class="glyphicon glyphicon-user"></span> ${login.name }
+				      		<span class="badge" id="messageCnt">0</span>
+				      	</a>
+				      	
+				      </li>
+				      <li><a href="${path }/member/logout.do"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+				      </c:if>
+				    </ul>
 				</div>
 			</div>
 		</nav>

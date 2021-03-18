@@ -61,10 +61,17 @@ public class MessageController implements Controller {
 			delete(request);
 		jspInfo = "redirect:list.do?page=1&perPageNum=" + pageObject.getPerPageNum();
 		break;
+		
+		// 6. 새로운 메시지 갯수 가져오기
+		case "/ajax/getMessageCnt.do":
+			//jspInfo = "123";
+			jspInfo = "" + getMessageCnt(request);
+			break;
 
 		default:
 			throw new Exception("페이지 오류 404 - 존재하지 않는 페이지 입니다.");
 		}
+		
 
 		return jspInfo;
 	}
@@ -143,5 +150,14 @@ public class MessageController implements Controller {
 		Integer result = (Integer) ExeService.execute(Beans.get(url), no);
 		if(result == 0 ) throw new Exception("게시판 글삭제 오류 - 존재하지 않는 글은 삭제할수 없습니다.");
 
+	}
+	
+	// 6. 새로운 메시지 갯수를 가져오기
+	private Long getMessageCnt(HttpServletRequest request) throws Exception {
+		// session에 있는 id를 꺼낸다.
+		LoginVO vo = (LoginVO)request.getSession().getAttribute("login");
+		if(vo == null) throw new Exception("MessageController.getMessageCnt() - 로그인이 안되어 있다.");
+		String id = vo.getId();
+		return (Long)ExeService.execute(Beans.get(AuthorityFilter.url), id);
 	}
 }

@@ -87,9 +87,6 @@ public class DBSQL {
 	public static final String NOTICE_WRITE 
 	= " insert into notice(no, title, content, startDate, endDate) "
 	+ " values(notice_seq.nextval, ?, ?, ?, ?) ";
-	// 2. 공지사항 보기
-	public static final String NOTICE_VIEW
-	= "select no, title, content, ";
 
 	// 이미지 게시판 쿼리
 	// 1. 리스트 - 번호, 제목, 작성자이름(작성자ID), 작성일, 파일명
@@ -195,6 +192,10 @@ public class DBSQL {
 	public static final String MESSAGE_DELETE
 	= " delete from message where no = ? ";
 	
+	// 6. 새로운 메시지 갯수 가져오기
+	public static final String MESSAGE_GET_MESSAGE_CNT
+	= " select count(*) from message where accepter = ? and acceptDate is null ";
+	
 	
 	// 회원관리 쿼리 ---------------------------------------------------------
 	// 로그인 처리
@@ -220,13 +221,16 @@ public class DBSQL {
 			+ " to_char(m.birth, 'yyyy.mm.dd') birth, m.tel, m.email, "
 			+ " to_char(m.regDate,'yyyy.mm.dd') regDate, m.status, m.gradeNo, g.gradeName "
 			+ " from member m, grade g where (m.id = ?) and (m.gradeNo = g.gradeNo)";
+	// 회원 가입
+	public static final String MEMBER_WRITE
+	= " insert into member(id, pw, name, gender, birth, tel, email) "
+			+ " values(?, ?, ?, ?, ?, ?, ?)";
 	// 회원등급 수정
 	public static final String MEMBER_GRADE_MODIFY
 	= "update member set gradeNo = ? where id = ?";
 	
-	// 회원가입
-	public static final String MEMBER_JOIN
-	= "insert into member(id, pw, name, gender, birth, tel, email from member)"
-			+ "values (?, ?, ?, ?, ?, ?, ?)";
+	// 아이디 중복 체크
+	public static final String MEMBER_CHECK_ID
+	= "select id from member where id = ?";
 	
 }

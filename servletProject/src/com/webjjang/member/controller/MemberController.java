@@ -1,8 +1,10 @@
 package com.webjjang.member.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.webjjang.member.vo.LoginVO;
 import com.webjjang.member.vo.MemberVO;
@@ -44,19 +46,19 @@ public class MemberController implements Controller{
 			jspInfo = MODULE + "/view";			
 			break;
 		
-		// 3-1. 회원 글쓰기 폼
+		// 3-1. 회원 등록 폼
 		case "/" + MODULE +"/writeForm.do":
 			// "member/view" 넘긴다. -> /WEB-INF/views/ + member/view + .jsp를 이용해서 HTML을 만든다.
 			jspInfo = MODULE + "/writeForm";			
 			break;
 		
-		// 3-2. 회원 글쓰기 처리
+		// 3-2. 회원 등록 처리
 		case "/" + MODULE +"/write.do":
 			// service - dao --> request에 저장까지 해준다.
 			write(request);
 		
-			// "member/view" 넘긴다. -> /WEB-INF/views/ + member/view + .jsp를 이용해서 HTML을 만든다.
-			jspInfo = "redirect:list.do?page=1&perPageNum=" + pageObject.getPerPageNum();			
+			// 회원가입이 끝나면 자동으로 로그인 페이지로 이동시킨다.
+			jspInfo = "redirect:/member/loginForm.do";			
 			break;
 		
 		// 4-1. 회원 글수정 폼
@@ -95,9 +97,8 @@ public class MemberController implements Controller{
 		case "/" + MODULE +"/login.do":
 			// service - dao --> request에 저장까지 해준다.
 			login(request);
-		
-			// list.do로 자동으로 이동
-			jspInfo = "redirect:/board/list.do";			
+			// main으로 자동 이동시킨다.
+			jspInfo = "redirect:/";			
 			break;
 		
 		// 6-2. 로그아웃 처리
@@ -105,18 +106,23 @@ public class MemberController implements Controller{
 			// service - dao --> request에 저장까지 해준다.
 			logout(request);
 		
-		// list.do로 자동으로 이동
-		jspInfo = "redirect:/board/list.do";			
-		break;
+			// main으로 자동 이동시킨다.
+			jspInfo = "redirect:/";			
+			break;
 		
-		// 7. 회원가입 처리
-		case "/" + MODULE + "/join.do;"
-			join(request);
-		jspInfo = "redirect:/main.do";
+			// 7. 아이디 중복 체크
+		case "/ajax/checkId.do":
+			// DB에서 입력한 아이디를 찾아온다.
+			// 찾아온 아이디를 request에 넣는다.
+			checkId(request);
+			
+			// div 안에 들어갈 코드만 있는 jsp로 이동시킨다.
+			jspInfo = "member/checkId";
+		
 		break;
 		
 		default:
-			throw new Exception("페이지 오류 404 - 존재하지 않는 페이지입니다.");
+			throw new Exception("MemberController 페이지 오류 404 - 존재하지 않는 페이지입니다.");
 		}
 		
 		// jsp의 정보를 가지고 리턴한다.
@@ -160,15 +166,26 @@ public class MemberController implements Controller{
 	private void write (HttpServletRequest request) throws Exception {
 
 		// 1. 데이터 수집
-		String title = request.getParameter("title");
-		String content = request.getParameter("content");
-		String writer = request.getParameter("writer");
+		String id = request.getParameter("id");
+		String pw = request.getParameter("pw");
+		String name = request.getParameter("name");
+		String gender = request.getParameter("gender");
+		String birth = request.getParameter("birth");
+		String[] tels = request.getParameterValues("tel");
+		String email = request.getParameter("email");
 
 		MemberVO vo = new MemberVO();
-//		vo.setTitle(title);
-//		vo.setContent(content);
-//		vo.setWriter(writer);
-
+		vo.setId(id);
+		vo.setPw(pw);
+		vo.setName(name);
+		vo.setGender(gender);
+		vo.setBirth(birth);
+		if (tels == null) vo.setTel(Arrays.toString(tels));
+		vo.setEmail(email);
+		
+		// 들어온 데이터 확인
+		System.out.println("MemberController.write().vo : " + vo);
+		
 		// 2. DB 처리 - write.jsp -> service -> dao
 		Integer result = (Integer) ExeService.execute(Beans.get(AuthorityFilter.url), vo);
 
@@ -248,8 +265,11 @@ public class MemberController implements Controller{
 		// id, pw가 틀린 경우의 처리
 		if(loginVO == null) throw new Exception("로그인 정보를 확인해 주세요.");
 
+		HttpSession session = request.getSession();
 		// 로그인 처리
-		request.getSession().setAttribute("login", loginVO);
+		session.setAttribute("login", loginVO);
+		// 전달 메시지 저장
+		session.setAttribute("msg", loginVO.getName() + "님 환영합니다. ");
 	}
 	
 	// 6. 로그아웃 처리
@@ -257,5 +277,15 @@ public class MemberController implements Controller{
 		// 로그아웃 처리
 		request.getSession().invalidate();
 		System.out.println("로그아웃 처리가 되었습니다.");
+	}
+	
+	// 7. 아이디 중복 체크
+	private void checkId(HttpServletRequest request) throws Exception {
+		// 넘어오는 아이디 받기
+		String id = request.getParameter("id");
+		// DB 처리 -> id를 가져온다.
+		String result = (String) ExeService.execute(Beans.get(AuthorityFilter.url), id);
+		// 서버 객체에 저장한다.
+		request.setAttribute("id", result);
 	}
 }
