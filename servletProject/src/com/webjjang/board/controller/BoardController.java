@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.webjjang.board.vo.BoardReplyVO;
 import com.webjjang.board.vo.BoardVO;
 import com.webjjang.main.controller.Beans;
 import com.webjjang.main.controller.Controller;
@@ -23,21 +24,24 @@ public class BoardController implements Controller {
 		// 페이지를 위한 처리
 		PageObject pageObject = PageObject.getInstance(request);
 		request.setAttribute("pageObject", pageObject); // 페이지를 보여주기 위해 서버객체에 담는다.
-		
+
 		switch (AuthorityFilter.url) {
 		// 1. 게시판 리스트
 		case "/" + MODULE + "/list.do":
 			// service - dao -- request에 저장 까지 해준다.
 			list(request, pageObject);
 
-			// "board/list" 넘긴다. -> WEB-INF/views/ + board/list + .jsp를 이용해서 HTML을 만든다.
+			// "board/list" 넘긴다. -> /WEB-INF/views/ + board/list + .jsp를 이용해서 HTML을 만든다.
 			jspInfo = MODULE + "/list";
 			break;
 
 		// 2. 게시판 글보기
 		case "/" + MODULE + "/view.do":
 			// service - dao -- request에 저장 까지 해준다.
-			view(request);
+			// 글보기를 하는 데이터 가져오기. 댓글 때문에 글 번호를 다시 돌려준다.
+			// Long no = view(request);
+			// 댓글 리스트 가져오기
+			replyList(view(request), pageObject, request);
 
 			// "board/view" 넘긴다. -> WEB-INF/views/ + board/view + .jsp를 이용해서 HTML을 만든다.
 			jspInfo = MODULE + "/view";
@@ -70,10 +74,10 @@ public class BoardController implements Controller {
 			// service - dao -- request에 저장 까지 해준다.
 			Long no = update(request);
 			// "board/view" 넘긴다. -> view.do로 자동으로 이동
-			jspInfo = "redirect:view.do?no=" + no + "&inc=0&page=" + pageObject.getPage() 
-			+ "&perPageNum" + pageObject.getPerPageNum();
+			jspInfo = "redirect:view.do?no=" + no + "&inc=0&page=" + pageObject.getPage() + "&perPageNum"
+					+ pageObject.getPerPageNum();
 			break;
-			
+
 		// 5. 게시판 글삭제 처리
 		case "/" + MODULE + "/delete.do":
 			// service - dao -- request에 저장 까지 해준다.
@@ -82,9 +86,27 @@ public class BoardController implements Controller {
 			jspInfo = "redirect:list.do?page=1&perPageNum=" + pageObject.getPerPageNum();
 			break;
 
+		// 6. 게시판 댓글 등록 처리
+		case "/" + MODULE + "/replyWrite.do":
+			// service - dao -- request에 저장 까지 해준다.
+			replyWrite(request);
+			System.out.println("BoardController [query] - " + request.getQueryString());
+			// list.do로 자동으로 이동
+			jspInfo = "redirect:view.do?" + request.getQueryString() + "&inc=0";
+			break;
+
+		// 7. 게시판 댓글 수정 처리
+		case "/" + MODULE + "/replyUpdate.do":
+			// service - dao -- request에 저장 까지 해준다.
+			// delete(request);
+			System.out.println("BoardController [query] - " + request.getQueryString());
+			// list.do로 자동으로 이동
+			jspInfo = "redirect:view.do?no=" + request.getParameter("no") + "&inc=0";
+			break;
+
 		default:
 			throw new Exception("페이지 오류 404 - 존재하지 않는 페이지 입니다.");
-			
+
 		}
 		// jsp의 정보를 가지고 리턴한다.
 		return jspInfo;
@@ -99,12 +121,12 @@ public class BoardController implements Controller {
 		List<BoardVO> list = (List<BoardVO>) ExeService.execute(Beans.get(AuthorityFilter.url), pageObject);
 		// 서버객체 request에 담는다.
 		request.setAttribute("list", list);
-		
 
 	}
 
 	// 2. 게시판 글보기 처리.
-	private void view(HttpServletRequest request) throws Exception {
+	// return type을 Long 으로 한 이유 : 댓글을 가져오려면 글번호가 필요하다. 타입이 Long
+	private Long view(HttpServletRequest request) throws Exception {
 
 		// 여기가 자바 코드입니다. servlet - controller - Service-DAO -> /board/view.do
 
@@ -119,7 +141,11 @@ public class BoardController implements Controller {
 		BoardVO vo = (BoardVO) ExeService.execute(Beans.get(AuthorityFilter.url), new Long[] { no, inc });
 		// 서버객체 request에 담는다.
 		request.setAttribute("vo", vo);
+	
+		return no;
 	}
+	
+	// 글번호를 리턴한다.
 
 	// 3. 게시판 글쓰기 처리
 	private void write(HttpServletRequest request) throws Exception {
@@ -175,11 +201,11 @@ public class BoardController implements Controller {
 
 		if (result < 1)
 			throw new Exception("게시판 글수정 - 수정할 데이터가 존재하지 않습니다.");
-		
+
 		return no;
-		
+
 	}
-	
+
 	// 5. 게시판 글삭제 처리
 	private void delete(HttpServletRequest request) throws Exception {
 		// 1. 데이터 수집
@@ -189,7 +215,37 @@ public class BoardController implements Controller {
 		// 2. DB 처리 - delete.jsp -> service -> dao
 		String url = request.getServletPath();
 		Integer result = (Integer) ExeService.execute(Beans.get(url), no);
-		if(result == 0 ) throw new Exception("게시판 글삭제 오류 - 존재하지 않는 글은 삭제할수 없습니다.");
+		if (result == 0)
+			throw new Exception("게시판 글삭제 오류 - 존재하지 않는 글은 삭제할수 없습니다.");
 
+	}
+	
+	// 6. 댓글 리스트 가져오기
+	private void replyList(Long no, PageObject pageObject, HttpServletRequest request) 
+		throws Exception {
+		// DB에서 데이터 가져오기
+		// 연결URL => /board/view.do -> 게시판 글보기
+		// 댓글 리스트는 URL이 존재하지 않으나 데이터를 가져오기 위해 강제 셋팅 해준다.
+		// 처리되는 정보를 출력하지 않는다.
+		// request.setAttribute("list", Beans.get("/board/replyList.do").service(new Object[] {no, pageObject}));
+		// 처리되는 정보를 출력하는 프로기 구조의프로그램을 거쳐 간다.
+		request.setAttribute("list", ExeService.execute(Beans.get("/board/replyList.do"), new Object[] {no, pageObject}));
+	}
+	
+	// 7. 댓글 등록
+	private void replyWrite(HttpServletRequest request) throws Exception {
+		// 데이터 수집
+		String strNo = request.getParameter("no");
+		String content = request.getParameter("content");
+		String writer = request.getParameter("writer");
+		// VO 객체 생성과 저장
+		BoardReplyVO vo = new BoardReplyVO();
+		vo.setNo(Long.parseLong(strNo));
+		vo.setContent(content);
+		vo.setWriter(writer);
+		// 정보를 출력하는 필터 처리가 된다.
+		ExeService.execute(Beans.get(AuthorityFilter.url), vo);
+		// 정보를 출력하지 않고 직접 호출해서 실행은 된다.
+		// Beans.get(AuthorityFilter.url).service(vo);
 	}
 }

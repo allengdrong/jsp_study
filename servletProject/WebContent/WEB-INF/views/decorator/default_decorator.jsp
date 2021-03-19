@@ -7,7 +7,7 @@
 	uri="http://www.opensymphony.com/sitemesh/decorator"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
-System.out.println("default_decorator.do [path] : " + request.getContextPath());
+	System.out.println("default_decorator.do [path] : " + request.getContextPath());
 request.setAttribute("path", request.getContextPath());
 %>
 <!DOCTYPE html>
@@ -77,16 +77,29 @@ article {
 			var myVar = setInterval(getMessageCnt, 3000);
 			function getMessageCnt(){
 				// 서버에 가서 사용자가 받은 새로운 메시지의 갯수를 가져오는 처리
-				$("#messageCnt").load("/ajax/getMessageCnt.do");
+				$("#messageCnt").load("/ajax/getMessageCnt.do",
+						function(result, status){
+					/// console.log(status);
+					if(status=="error"){
+						// 로그인 정보 오류가 나는 경우의 처리
+						// 실시간으로 실행되고 있는 함수의 시간을 제거해서 멈추게 한다.
+						clearTimeout(myVar);
+						// 경고를 띄운다.
+						alert("세션이 끊겨서 다시 로그인 하셔야 합니다.");
+						// 경고의 확인을 누르면 로그인으로 이동시킨다.
+						location = "/member/loginForm.do";
+						}
+					}
+				);
 			}
 		</c:if>
 	});
 </script>
-<decorator:head/>
+<decorator:head />
 </head>
 <body>
 	<header>
-<!-- 		<div><img href="#"/></div> -->
+		<!-- 		<div><img href="#"/></div> -->
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="container-fluid">
 				<div class="navbar-header">
@@ -105,31 +118,29 @@ article {
 						<!-- $amp; : &, &lt; : <, &gt; : >. &ndsp; : blank -->
 						<li><a href="${path }/qna/list.do">Q&amp;A</a></li>
 						<c:if test="${!empty login }">
-						<!-- 로그인 되어 있는 경우의 메뉴 -->
-						<li><a href="${path }/message/list.do">메시지</a></li>
+							<!-- 로그인 되어 있는 경우의 메뉴 -->
+							<li><a href="${path }/message/list.do">메시지</a></li>
 						</c:if>
 					</ul>
 					<!-- 메인 메뉴 부분의 로그인 사용자 정보 -->
-				    <ul class="nav navbar-nav navbar-right">
-				      <c:if test="${empty login }">
-				      <!-- 로그인이 안되어 있는 경우의 메뉴 -->
-				      <li><a href="${path }/member/writeForm.do">
-				      	<span class="glyphicon glyphicon-user"></span> 회원가입</a>
-				      </li>
-				      <li><a href="${path }/member/loginForm.do"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-				      </c:if>
-				      <c:if test="${!empty login }">
-				      <!-- 로그인이 되어 있는 경우의 메뉴 -->
-				      <li>
-				      	<a href="">
-				      		<span class="glyphicon glyphicon-user"></span> ${login.name }
-				      		<span class="badge" id="messageCnt">0</span>
-				      	</a>
-				      	
-				      </li>
-				      <li><a href="${path }/member/logout.do"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-				      </c:if>
-				    </ul>
+					<ul class="nav navbar-nav navbar-right">
+						<c:if test="${empty login }">
+							<!-- 로그인이 안되어 있는 경우의 메뉴 -->
+							<li><a href="${path }/member/writeForm.do"> <span
+									class="glyphicon glyphicon-user"></span> 회원가입
+							</a></li>
+							<li><a href="${path }/member/loginForm.do"><span
+									class="glyphicon glyphicon-log-in"></span> Login</a></li>
+						</c:if>
+						<c:if test="${!empty login }">
+							<!-- 로그인이 되어 있는 경우의 메뉴 -->
+							<li><a href=""> <span class="glyphicon glyphicon-user"></span>
+									${login.name } <span class="badge" id="messageCnt">0</span>
+							</a></li>
+							<li><a href="${path }/member/logout.do"><span
+									class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+						</c:if>
+					</ul>
 				</div>
 			</div>
 		</nav>
@@ -137,7 +148,8 @@ article {
 	<article>
 		<decorator:body />
 	</article>
-	<footer class="container-fluid text-center navbar navbar-inverse navbar-fixed-bottom">
+	<footer
+		class="container-fluid text-center navbar navbar-inverse navbar-fixed-bottom">
 		<p>이젠 컴퓨터 학원</p>
 	</footer>
 </body>

@@ -28,6 +28,25 @@ public class DBSQL {
 	public static final String BOARD_GET_TOTALROW
 	= " select count(*) from board ";
 	
+	// 게시판 댓글 리스트
+	public static final String BOARD_REPLY_LIST 
+	= "select rnum, rno, no, content, writer,"
+			+ " to_char(writeDate, 'yyyy.mm.dd') writeDate from( "
+			+ " select rownum rnum,rno, no, content, writer, writeDate  from ("
+				+ " select rno, no, content, writer, writeDate from board_reply "
+				+ " where no = ? "
+				+ " order by rno desc "
+			+ " ) "
+			+ ") where rnum between ? and ?  ";
+	public static final String BOARD_GET_REPLY_TOTALROW
+	= " select count(*) from board_reply"
+			+ " where no = ? ";
+	// 댓글 등록
+	public static final String BOARD_REPLY_WRITE
+	= " insert into board_reply(rno, no, content, writer) "
+			+ " values(board_reply_seq.nextval, ?, ?, ?) ";
+	
+	
 	
 	// 공지사항 쿼리
 	// 1. 리스트 - 번호, 제목, 공지시작일, 공지종료일, 최근 수정일
