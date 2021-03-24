@@ -1,0 +1,11 @@
+package com.OOTD.main.controller;
+
+public interface Service {
+
+	
+		public Object service(Object obj) throws Exception;
+		
+		
+		public void setDAO( Object dao);
+		
+}

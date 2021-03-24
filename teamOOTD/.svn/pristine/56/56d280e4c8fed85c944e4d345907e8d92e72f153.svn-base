@@ -1,0 +1,126 @@
+/**
+ * 서버가 실행될 때 초기화 시켜주는 Servlet
+ * 작성자 :OOTD
+ * 작성일 : 2021.03.23
+ * ver_1.0
+ */
+
+package com.OOTD.main.controller;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+
+/**
+ * Servlet implementation class Init
+ */
+@WebServlet(value = "/Init",loadOnStartup = 1)
+public class Init extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public Init() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see Servlet#init(ServletConfig)
+	 */
+	public void init(ServletConfig config) throws ServletException {
+		// TODO Auto-generated method stub
+		
+		System.out.println("===============OOTD Project 서버 실행===============");
+		
+		
+		//controller
+		//--생성 확인 필수 Null조심!!--
+//	ex) Beans.putController("/notice", new NoticeController());
+		
+		
+		
+		
+		
+		//////////////////// notice ////////////////////
+		//--생성 확인 필수 Null조심!!--
+		
+//	ex) Beans.putDAO("noticeDAO", new NoticeDAO());
+		
+		
+//	ex) Beans.putService("notice/list.do", new NoticeListService());
+		
+		
+		
+//	ex) Beans.getService("notice/list.do").setDAO(Beans.getDAO("noticeDAO"));
+		
+		
+		//저장이 잘되어 있는지 출력
+//		System.out.println(Beans.get("notice/list.do"));
+//		System.out.println(Beans.getDAO("noticeDAO"));
+		
+		
+		
+		//////////////////// QNA ////////////////////
+		//--생성 확인 필수 Null조심!!--
+		
+		//저장이 잘되어 있는지 출력
+//		System.out.println(Beans.get("notice/list.do"));
+//		System.out.println(Beans.getDAO("noticeDAO"));		
+		
+		
+		
+		//////////////////// fashion ////////////////////
+		//--생성 확인 필수 Null조심!!--
+		
+		//저장이 잘되어 있는지 출력
+//		System.out.println(Beans.get("notice/list.do"));
+//		System.out.println(Beans.getDAO("noticeDAO"));		
+		
+		
+		
+		//////////////////// timeline ////////////////////
+		//--생성 확인 필수 Null조심!!--
+		
+		//저장이 잘되어 있는지 출력
+//		System.out.println(Beans.get("notice/list.do"));
+//		System.out.println(Beans.getDAO("noticeDAO"));
+		
+		
+		
+		//////////////////// member ////////////////////
+		//--생성 확인 필수 Null조심!!--
+		
+		//저장이 잘되어 있는지 출력
+//		System.out.println(Beans.get("notice/list.do"));
+//		System.out.println(Beans.getDAO("noticeDAO"));
+		
+		
+		
+		//////////////////// like ////////////////////
+		//--생성 확인 필수 Null조심!!--
+		
+		//저장이 잘되어 있는지 출력
+//		System.out.println(Beans.get("notice/list.do"));
+//		System.out.println(Beans.getDAO("noticeDAO"));
+		
+		
+		
+		
+		
+		try {
+			
+			Class.forName("com.DDTO.util.db.DBInfo");
+		} catch (ClassNotFoundException e) {
+			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			throw new ServletException("드라이버 확인 처리 중 오류 발생");
+		}
+	}
+}
+
+

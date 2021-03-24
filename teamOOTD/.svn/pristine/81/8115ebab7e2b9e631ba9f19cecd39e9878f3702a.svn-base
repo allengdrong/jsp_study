@@ -1,0 +1,15 @@
+/**
+ * Controller를 실행시켜주는 InterFace
+ * 작성자 : OOTD
+ * 작성일 : 2021.03.23
+ * ver_1.0
+ */
+
+package com.OOTD.main.controller;
+
+import javax.servlet.http.HttpServletRequest;
+
+public interface Controller {
+
+	public String execute(HttpServletRequest request)throws Exception;
+}

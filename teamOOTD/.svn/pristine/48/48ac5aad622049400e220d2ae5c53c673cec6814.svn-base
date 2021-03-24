@@ -1,0 +1,52 @@
+/**
+ *  Service, Controller, DAO를 저장 및 사용시켜주는 Class
+ *  작성자 :OOTD
+ *  작성일 : 2021.03.23
+ *  ver_1.0
+ */
+
+package com.OOTD.main.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Beans {
+
+			//controller 저장 객체
+			private static Map<String, Controller> controllerMap = new HashMap<>();
+			
+			//service 저장 객체
+			private static Map<String, Service> serviceMap = new HashMap<>();
+			
+			//dao 저장 객체 
+			private static Map<String, Object> daoMap = new HashMap<>();
+			
+			
+			//controller 객체 가져가기
+			public static Controller getController(String key) {
+				return controllerMap.get(key);
+			}
+			//controller 객체에 넣기
+			public static void putController(String key, Controller controller) {
+				controllerMap.put(key, controller);
+			}
+			
+			//service 객체 가져가기
+			public static Service getService(String key) {
+					return serviceMap.get(key);
+			}
+			
+			//service 객체 넣기
+			public static void putService(String key, Service service) {
+				serviceMap.put(key, service);
+			}
+			
+			//dao 객체 가져가기
+			public static Object getDAO(String key) {
+				return daoMap.get(key);
+			}
+			//dao 객체 넣기
+			public static void putDAO(String key, Object dao) {
+				daoMap.put(key, dao);
+			}
+}
